@@ -4,6 +4,10 @@ https://fastapi.tiangolo.com/virtual-environments/#install-packages-directly
 
 REALIZAR LOS PASOS DEL 1 AL 7 PARA CADA DISPOSITIVO DIFERENTE EN EL QUE CLONÓ EL REPOSITORIO
 
+ - Asegurarse de esto antes de hacer un push!
+Iniciar repositorio en git y agregar al .gitignore el archivo .venv
+echo "*" > .venv/.gitignore
+ - - - - 
 
 1. crear entorno virtual: asegurese de estar ubicado en el repositorio del proyecto
 ejecute: python -m venv .venv
@@ -15,11 +19,9 @@ terminal powerShell: .venv\Scripts\Activate.ps1
 3. Actualizar a la última version el pip
 python -m pip install --upgrade pip
 
-4. Iniciar repositorio en git y agregar al .gitignore el archivo .venv
-echo "*" > .venv/.gitignore
 
 
-5. Instalar los paquetes por medio de requirements.txt:
+4. Instalar los paquetes por medio de requirements.txt:
 pip install -r requirements.txt
 
 
