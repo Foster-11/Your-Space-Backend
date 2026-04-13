@@ -2,11 +2,6 @@ Table Owner [headercolor: #175e7a] {
 	idOwner integer [ pk, increment, not null, unique ]
 	name varchar(100)
 	lastName varchar(255)
-	email 
-	"    " 
-	"" 
-	"" 
-	"" 
 }
 
 Table Space [headercolor: #175e7a] {
