@@ -9,7 +9,7 @@ Iniciar repositorio en git y agregar al .gitignore el archivo .venv
 echo "*" > .venv/.gitignore
  - - - - 
 
-EJECUTE EL PASO 1,3 Y 4 SOLO SI ES LA PRIMERA VEZ
+EJECUTE EL PASO 1,3 SOLO SI ES LA PRIMERA VEZ - HACER EL RESTO DE PASOS SIEMPRE
 1. crear entorno virtual: asegurese de estar ubicado en el repositorio del proyecto
 ejecute: python -m venv .venv
 
