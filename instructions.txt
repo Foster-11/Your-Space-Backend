@@ -30,7 +30,7 @@ pip install -r requirements.txt
 
 
 Ejecucion del repositorio:
-fastapi dev
+uvicorn main:start
 
 -----
 
