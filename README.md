@@ -58,3 +58,58 @@ The next URL show the documentation of this project
 
 
 It's been based on Swagger tool
+
+
+
+
+
+
+
+
+
+
+
+
+Estructura: 
+
+root/
+├── main.py
+│
+├── api/                    # Capa HTTP
+│   ├── app.py
+│   ├── routers/
+│   │   ├── owner_router.py
+│   │   ├── space_router.py
+│   │   └── reservation_router.py
+│   ├── schemas/            # Pydantic (request/response)
+│   │   ├── owner_schema.py
+│   │   └── space_schema.py
+│
+├── domain/                 # Núcleo del negocio (TESTEABLE)
+│   ├── models/             # Entidades del negocio
+│   │   ├── owner.py
+│   │   ├── space.py
+|   |   └── reservation.py
+│   ├── services/           # Lógica del negocio
+│   │   ├── owner_service.py
+│   │   ├── space_service.py
+│   |   └── Reservation.py
+|
+├── infrastructure/         # Detalles técnicos
+│   ├── db/
+│   │   ├── session.py      # conexión Neon/Postgres
+│   │   ├── base.py
+│   │   └── repositories/
+│   │       ├── owner_repository.py
+│   │       └── space_repository.py
+│   ├── broker/             # si luego usas eventos
+│
+├── tests/
+│   ├── unit/
+│   │   ├── test_owner_service.py
+│   │   └── test_space_service.py
+│   └── api/
+│       └── test_owner_router.py
+│
+├── requirements.txt
+└── pyproject.toml (opcional)
