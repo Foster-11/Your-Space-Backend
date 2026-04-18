@@ -1,9 +1,12 @@
+# main.py : Inicia el servidor y define la configuración de ejecución
+
 import uvicorn
 
 # Funcion que inicia el servidor con uvicorn
 def start():
     uvicorn.run(
-        "api.ownerWebApi:app",
+        #Configuración
+        "api.app:app",
         host="127.0.0.1",
         port=8070,
         reload=True

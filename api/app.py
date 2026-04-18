@@ -1,4 +1,7 @@
 
+#api/ : capa HTTP. Recibe el trafico HTTP y lo distribuye
+
+# app.py : registra routers y configura middleware
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
