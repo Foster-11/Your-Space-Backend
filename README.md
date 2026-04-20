@@ -121,9 +121,29 @@ Fases del desarrollo del proyecto:
  
 1. Definir reglas de negocio 
 2. Levantar el servidor (Para nuestro caso, FastApi y uvicorn)
-3. Crear modelos y servicios (Domain/)
+3. Crear modelos y servicios (domain/)
 4. Primer Test de dominio
 5. Implementar lógica mínima
 6. Creae routers, schemas 
 7. Conectar BD, Repositorios, SqlAlchemy
 8. Sonarqube
+
+
+
+domain/services/  -> Flujos
+
+Register:
+1. Recibe name, email, password
+2. verifica: si existe email
+3. hashea contraseña
+4. crea owner
+5. devuelve owner
+
+api llama a este service
+
+Login:
+2. Recibe: email. password
+3. busca owner por email
+4. valida contraseña
+5. si falla - error de dominio
+6. si ok - return owner autenticado
