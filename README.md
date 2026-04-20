@@ -113,3 +113,17 @@ root/
 │
 ├── requirements.txt
 └── pyproject.toml (opcional)
+
+
+
+
+Fases del desarrollo del proyecto:
+ 
+1. Definir reglas de negocio 
+2. Levantar el servidor (Para nuestro caso, FastApi y uvicorn)
+3. Crear modelos y servicios (Domain/)
+4. Primer Test de dominio
+5. Implementar lógica mínima
+6. Creae routers, schemas 
+7. Conectar BD, Repositorios, SqlAlchemy
+8. Sonarqube
