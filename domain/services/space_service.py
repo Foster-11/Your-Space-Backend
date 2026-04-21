@@ -1,5 +1,5 @@
 # domain/ : Razon de ser del sistema, nucleo del negocio testeable
-# ../services/: logica real,  reglas del negocio
+# ../services/: logica real,  reglas del negocio, lanzamiento de excepciones (fail fast + graceful handling)
 # space_service.py : reglas para los salones en el sistema
 
 # space_service.py
