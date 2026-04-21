@@ -31,5 +31,27 @@ def register_owner(
   email: str,
   password: str
 ) -> Owner:# Qué es? por qué esta funcion es diferente a la de los servicios de las demás entidads?
-  existing_owner
-  
+    existing_owner = owner_repo.get_by_id(email)
+    
+    if existing_owner:
+     raise OwnerAlreadyExistsError("El email ya existe")
+    
+    hashed_password = hash_password(password)
+    
+    owner = Owner(
+     name=name,
+     las_name=last_name,
+     email=email,
+     password=hashed_password
+    )
+      
+    owner_repo.add(owner)
+    return owner
+
+def login_owner() -> Owner:
+    owner = owner_repo.get_by_email(email)
+
+    if not owner or nor verify_password(password, owner.password):
+     raise InvalidCredentialsError("Invalid email or password")
+
+    return owner
