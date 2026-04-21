@@ -15,8 +15,12 @@ from domain.models.space import Space # import del modelo de la entidad
 
 
 def create_space(
-        *, # qué es? qué representa?
-        space_repo, # qué es? qué representa?
+        *, # Este asterisco indica que TODOS los parámetros
+        # deben pasarse por nombre (keyword-only).
+        space_repo, # Es una dependencia inyectada (repository).
+        # El service NO sabe cómo se guarda el Space.
+        # Solo delega persistencia.
+
         id_owner, 
         name, 
         description, 
@@ -24,9 +28,14 @@ def create_space(
         ):
     
     if capacity <= 0:
-        raise ValueError("La capacidad debe ser mayor a 0") # Si el condicional se cumple, qué pasa?
+        raise ValueError("La capacidad debe ser mayor a 0") # raise ValueError lanza una excepción de dominio
+        # La ejecución del service SE DETIENE aquí
+        # El sistema NO se "cuelga" si el error se captura en la AP
+
     
-    space = Space( # Crea objeto Space??
+    space = Space( # se crea una instancia del modelo ORM
+        # Esto NO guarda en BD todavía
+
         name = name,
         description = description,
         capacity = capacity,
