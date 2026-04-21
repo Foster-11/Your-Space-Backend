@@ -1,5 +1,5 @@
 # domain/ : Razon de ser del sistema, nucleo del negocio testeable
-# ../services/: logica real,  reglas del negocio
+# ../services/: logica real,  reglas del negocio, lanzamiento de excepciones (fail fast + graceful handling)
 # reservation_service.py : reglas para las reservas en el sistema
 
 #reservation_service.py
@@ -15,9 +15,11 @@
 from domain.models.reservation import Reservation
 
 def create_reservation(
-        *, # qué es? qué representa?
-        reservation_repo, # qué es? qué representa?
-        space_repo, # qué es? qué representa?
+        *, # Keyword-only: contrato claro del servicio
+        reservation_repo, # Repo de Reservation, encapsula queries
+        # (ej: exists_overlap, add)
+
+        space_repo, # Se usa para validar que el space exista
         id_space,
         start_datetime,
         end_datetime,
@@ -26,11 +28,11 @@ def create_reservation(
         clien_email
         ):
     
-    if start_datetime >= end_datetime:
+    if start_datetime >= end_datetime: #Regla de negocio
         raise ValueError("El inicio de la reserva debe estar antes que el fin de la reserva")
     
     space = space_repo.get_by_id(id_space)
-    if not space:
+    if not space: #No se puede reservar en space inexistente
         raise ValueError("Space no encontrado")
     
     overlapping = reservation_repo.exists_overlap(
@@ -38,10 +40,10 @@ def create_reservation(
         start_datetime, 
         end_datetime
     )
-    if overlapping:
+    if overlapping: #Regla crítica del dominio
         raise ValueError("El espacio ya está reservado para esta fecha y hora")
     
-    reservation = Reservation(
+    reservation = Reservation( #Se crea la entidad del dominio
         id_space = id_space,
         start_datetime = start_datetime,
         end_datetime = end_datetime,
