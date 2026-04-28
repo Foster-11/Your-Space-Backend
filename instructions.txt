@@ -50,3 +50,9 @@ pysonar \
   --sonar-project-key=test
 
 remplazar My_Token con el token que generaste en sonarqube al activar credenciales
+
+-------------
+Ejecutar pruebas unitarias
+
+en consola: pyteste
+
