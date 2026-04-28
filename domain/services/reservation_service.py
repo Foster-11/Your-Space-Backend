@@ -1,6 +1,6 @@
 # domain/ : Razon de ser del sistema, nucleo del negocio testeable
 # ../services/: logica real,  reglas del negocio, lanzamiento de excepciones (fail fast + graceful handling)
-# reservation_service.py : reglas para las reservas en el sistema
+# reservation_service.py : reglas para las reservas en el sistema - Entidad núclep
 
 #reservation_service.py
 

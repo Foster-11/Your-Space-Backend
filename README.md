@@ -86,10 +86,15 @@ root/
 │   │   └── space_schema.py
 │
 ├── domain/                 # Núcleo del negocio (TESTEABLE)
+|   ├── exceptions/     
+|   |   ├── base.py
+|   |   ├── owner.py           
 │   ├── models/             # Entidades del negocio
 │   │   ├── owner.py
 │   │   ├── space.py
-|   |   └── reservation.py
+|   |   ├── reservation.py
+|   ├── security/
+|   |   └── password.py     #  
 │   ├── services/           # Lógica del negocio
 │   │   ├── owner_service.py
 │   │   ├── space_service.py
@@ -114,7 +119,7 @@ root/
 │       └── test_owner_router.py
 │
 ├── requirements.txt
-└── pyproject.toml (opcional)
+└── README.md
 
 
 
