@@ -48,7 +48,8 @@ def create_reservation(
         start_datetime = start_datetime,
         end_datetime = end_datetime,
         client_name = client_name,
-        client_email = clien_email
+        client_email = clien_email,
+        event_name = event_name
     )
     reservation_repo.add(reservation)
     

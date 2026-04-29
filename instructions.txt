@@ -47,12 +47,12 @@ Se necesita globalmente instalar pysonar (?)
 pysonar \
   --sonar-host-url=http://localhost:9000 \
   --sonar-token=My_Token \
-  --sonar-project-key=test
+  --sonar-project-key=YourSpace-test1
 
 remplazar My_Token con el token que generaste en sonarqube al activar credenciales
 
 -------------
 Ejecutar pruebas unitarias
 
-en consola: pyteste
+en consola: pytest
 

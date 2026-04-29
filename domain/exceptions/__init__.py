@@ -10,7 +10,7 @@ from domain.exceptions.owner import OwnerAlreadyExistError, OwnerNotFound, Inval
 
 __all__ = [# define qué simbolos exporta públicamente del paquete
     "DomainError",
-    "OwnerAlreadyExistsError",
+    #"OwnerAlreadyExistsError",
     "InvalidCredentialsError",
     "OwnerNotFound",
 ]
