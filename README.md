@@ -118,6 +118,7 @@ pytest
 Estructura esperada: 
 
 ```
+
 root/
 ├── main.py
 │
