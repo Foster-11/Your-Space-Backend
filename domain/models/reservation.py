@@ -10,7 +10,7 @@ import sqlalchemy as sql
 import sqlalchemy.orm as orm
 from datetime import datetime
 
-import infrastructure.db.base as Base 
+from infrastructure.db.base import Base 
 
 
 

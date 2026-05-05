@@ -13,7 +13,7 @@ from sqlalchemy.dialects.postgresql import UUID
 import sqlalchemy as sql
 import sqlalchemy.orm as orm
 
-import infrastructure.db.base as Base 
+from infrastructure.db.base import Base 
 
 class Owner(Base):
     __tablename__ = "owner" # nombre de la tabla en la bd
@@ -23,7 +23,7 @@ class Owner(Base):
     email = sql.Column(sql.String, unique=True, index=True, nullable=False) #unique : restriccion para la bd
     password = sql.Column(sql.String, nullable=False) 
 
-#Relaciones
+    #Relaciones
     spaces = orm.relationship(
         "Space", # nombre de la clase en space.py
         back_populates="owner", # relacion inversa en space
