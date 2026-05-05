@@ -133,6 +133,7 @@ root/
 │
 ├── complements/            # Archivos de documentación complementaria 
 │   ├── YourSpace-DbDiagram.dbml
+│   ├── instructions.txt
 ├── domain/                 # Núcleo del negocio (TESTEABLE)
 │   ├── exceptions/
 │   │   ├── base.py
