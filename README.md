@@ -21,8 +21,8 @@ task : trascript here the "instrucciones.txt" file
 
 ### Prerequisites
 
-- **Python 3.10+**
-- **pip**
+- **Python 3.1.9**
+- **pip **
 
 ### Step 1 — Clone the repository
 
