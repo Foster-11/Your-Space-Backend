@@ -9,6 +9,7 @@ Iniciar repositorio en git y agregar al .gitignore el archivo .venv
 echo "*" > .venv/.gitignore
  - - - - 
 
+EJECUTE EL PASO 1,3 SOLO SI ES LA PRIMERA VEZ - HACER EL RESTO DE PASOS SIEMPRE
 1. crear entorno virtual: asegurese de estar ubicado en el repositorio del proyecto
 ejecute: python -m venv .venv
 
@@ -29,6 +30,29 @@ pip install -r requirements.txt
 
 
 Ejecucion del repositorio:
-fastapi dev
+uvicorn main:start
+
+-----
+
+SONARQUBE LOCAL 
+
+Se necesita globalmente instalar pysonar (?)
+
+1. doble click a StartSonar.bat dentro de la carpeta de SonarQube: C:\Users\rtsus\Documents\Sonar\sonarqube-26.4.0.121862\bin\windows-x86-64
 
 
+2. Log dentro de http://localhost:9000  con credenciales de sonarqube, hacer esto ejecutando el archivo .bat anteriormente mencionado
+
+3. GENERAR EL REPORTE QUE RECIBIRÁ SONARQUBE(hacer esto previamente al paso 4):
+ pytest --cov=./ --cov-report=xml
+
+4. Para ejecutar un Scann:  (ojo, debes tener instalado pysonar)
+pysonar --sonar-token=$SONAR_TOKEN
+
+$SONAR_TOKEN es el token que genera sonarqube asociado a nuestro proyecto, este está almacenado en el archivo .env
+-------------
+Ejecutar pruebas unitarias
+
+en consola: pytest
+
+LA INFORMACIÓN AQUÍ CONTENIDA SE ENCUENTRA EN LA DOCUMENTACIÓN OFICIAL

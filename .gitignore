@@ -8,3 +8,12 @@ __pycache__/
 
 # Ignorar archivos de configuración del entorno
 .env
+
+# SonarQube
+.Sonar/
+
+#Environment
+.env
+
+coverage.xml
+.coverage

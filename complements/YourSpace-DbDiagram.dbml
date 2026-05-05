@@ -1,0 +1,45 @@
+Table Owner [headercolor: #175e7a] {
+	idOwner integer [ pk, increment, not null, unique ]
+	name varchar(100)
+	lastName varchar(255)
+	password varchar(255)
+}
+
+Table Space [headercolor: #175e7a] {
+	idSpace integer [ pk, increment, not null, unique ]
+	idowner integer
+	name varchar(100)
+	description varchar(255)
+	capacity integer
+}
+
+Table Reservation [headercolor: #175e7a] {
+	idReservation integer [ pk, increment, not null, unique ]
+	idstate integer
+	idspace integer
+	startDate date
+	endDate date
+	startTime time
+	endTime time
+	eventName varchar(100)
+	eventDescription varchar(255)
+	clientName varchar(80)
+	clientLastName varchar(100)
+}
+
+Table State [headercolor: #175e7a] {
+	idState integer [ pk, increment, not null ]
+	name varchar(50)
+}
+
+Ref fk_Owner_idOwner_Space {
+	Owner.idOwner < Space.idowner [ delete: no action, update: no action ]
+}
+
+Ref fk_State_idState_Reservation {
+	State.idState - Reservation.idstate [ delete: no action, update: no action ]
+}
+
+Ref fk_Reservation_idspace_Space {
+	Reservation.idspace > Space.idSpace [ delete: no action, update: no action ]
+}
