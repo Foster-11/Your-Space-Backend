@@ -107,7 +107,7 @@ The next URL show the documentation of this project
  ```bash
 pysonar --sonar-token=$SONAR_TOKEN
  ```
-**Nota importante:** utilizar el archivo `.env.template` y renombrar como `.env` agregar valor de la variable `SONAR_TOKEN` por el token generado en sonarqube
+**Nota importante:** utilizar el archivo `.env.template`, crear una copia y renombrar como `.env` agregar valor de la variable `SONAR_TOKEN` por el token generado en sonarqube
 
 ---
 ## Ejecutar pruebas unitarias
