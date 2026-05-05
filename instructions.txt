@@ -43,14 +43,13 @@ Se necesita globalmente instalar pysonar (?)
 
 2. Log dentro de http://localhost:9000  con credenciales de sonarqube, hacer esto ejecutando el archivo .bat anteriormente mencionado
 
-3. Para ejecutar un Scann:  (ojo, debes tener instalado pysonar)
-pysonar \
-  --sonar-host-url=http://localhost:9000 \
-  --sonar-token=My_Token \
-  --sonar-project-key=YourSpace-test1
+3. GENERAR EL REPORTE QUE RECIBIRÁ SONARQUBE(hacer esto previamente al paso 4):
+ pytest --cov=./ --cov-report=xml
 
-remplazar My_Token con el token que generaste en sonarqube al activar credenciales
+4. Para ejecutar un Scann:  (ojo, debes tener instalado pysonar)
+pysonar --sonar-token=$SONAR_TOKEN
 
+$SONAR_TOKEN es el token que genera sonarqube asociado a nuestro proyecto, este está almacenado en el archivo .env
 -------------
 Ejecutar pruebas unitarias
 
