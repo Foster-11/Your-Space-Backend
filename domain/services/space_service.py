@@ -11,6 +11,8 @@
 # 4. listar esapcios - pending
 # 5. eliminar un space (nueva regla: no eliminar si tiene reservas futuras a la fecha actual) - pending
 
+from os import name
+
 from domain.models.space import Space # import del modelo de la entidad
 
 
@@ -21,26 +23,42 @@ def create_space(
         # El service NO sabe cómo se guarda el Space.
         # Solo delega persistencia.
 
+        owner_repo, # Repositorio para validar existencia del owner
         id_owner, 
         name, 
         description, 
         capacity
-        ):
+        ) -> Space: # El service devuelve una instancia de Space
     
+    """
+    Crea un nuevo Space asociado a un Owner existente.
+
+    Reglas de negocio:
+    - El owner debe existir
+    - El nombre no puede ser vacío
+    - La capacidad debe ser mayor que cero
+    """
+    #Validar que el owner exista
+    owner = owner_repo.get_by_id(id_owner)
+    if not owner:
+        raise ValueError("Owner no existe")
+    
+    # Validar nombre
+    if not name or not name.strip():
+        raise ValueError("El nombre del space es obligatorio")
+
+    # Validar capacidad
     if capacity <= 0:
-        raise ValueError("La capacidad debe ser mayor a 0") # raise ValueError lanza una excepción de dominio
-        # La ejecución del service SE DETIENE aquí
-        # El sistema NO se "cuelga" si el error se captura en la AP
+        raise ValueError("La capacidad debe ser mayor que cero")
 
-    
-    space = Space( # se crea una instancia del modelo ORM
-        # Esto NO guarda en BD todavía
-
-        name = name,
-        description = description,
-        capacity = capacity,
-        id_owner = id_owner
+    # Crear instancia de Space
+    space = Space(
+        name=name,
+        description=description,
+        capacity=capacity,
+        id_owner=id_owner
     )
 
+    # Guardar en el repositorio
     space_repo.add(space)
     return space

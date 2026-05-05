@@ -44,5 +44,5 @@ class Reservation(Base):
 
     space = orm.relationship(
         "Space", # nombre de la clase
-        back_populates="reservation" # vincula la relacion con Space.reservation
+        back_populates="reservations" # vincula la relacion con Space.reservation
     )

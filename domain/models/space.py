@@ -30,7 +30,8 @@ class Space(Base):
         back_populates="spaces" 
     )
 
-    reservation = orm.relationship( #vinculo visto en reservation.py
+
+    reservations = orm.relationship( #vinculo visto en reservation.py
         "Reservation", # nombre de la clase
         back_populates="space", 
         cascade="all, delete-orphan" # si se borra space, se borran todas sus reservas
