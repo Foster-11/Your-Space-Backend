@@ -104,11 +104,16 @@ The next URL show the documentation of this project
 ```
 
 4. Para ejecutar un Scann:  (ojo, debes tener instalado pysonar) 
-utilizar el archivo .env.template y agregar valor de la variable `SONAR_TOKEN` por el token generado en sonarqube
  ```bash
 pysonar --sonar-token=$SONAR_TOKEN
  ```
+**Nota importante:** utilizar el archivo `.env.template` y renombrar como `.env` agregar valor de la variable `SONAR_TOKEN` por el token generado en sonarqube
 
+---
+## Ejecutar pruebas unitarias
+ ```bash
+pytest
+ ```
 
 Estructura esperada: 
 
