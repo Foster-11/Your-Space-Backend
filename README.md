@@ -185,7 +185,46 @@ Fases del desarrollo del proyecto:
 7. Conectar BD, Repositorios, SqlAlchemy
 8. Sonarqube **(Implementado localmente)**
 
+---
+## Hablemos sobre las capas que componen este Backend y sus respectivos módulos
 
+### Domain :
+**Módulos**
+ * **exceptions:**
+ * **repositories:**
+ * **Models:**
+ * **Services:**
+ * **security:**
+
+### api : 
+**Módulos**
+ * **routers:**
+ * **schemas:** La responsabilidad de este módulo es definir contratos. Las schemas cumplen 3 funciones críticas: 1. Definir el contrato externo del sistema (¿Qué campos recibe el sistema?¿cuáles son obligatorios?¿cuáles son opcionales?¿qué tipo exacto tiene cada campo?¿en qué formato salen los campos?).
+
+    Los schemas protegen el dominio. Un ejemplo conceptual teniendo como referencia este repositorio y su contexto de negocio: El dominio tiene un `Owner.pasword` (hash), la api NUNCA expone esa `password`. Esta decisión vive dentro de schemas, no en el dominio
+
+    Traducen entre reglas internas del domain y el mundo exterior (HTTP/Usuario)
+
+    #### Flujo donde encajan los schemas en el sistema
+
+    ```
+    HTTP Request
+        ↓
+    [ Schema (input) ]
+        ↓
+    [ API Route ]
+        ↓
+    [ Domain Service ]
+        ↓
+    [ Domain Model ]
+        ↓
+    [ API Route ]
+        ↓
+    [ Schema (output) ]
+        ↓
+    HTTP Response
+```
+---
 
 # **domain/services/  -> Flujos**
 
