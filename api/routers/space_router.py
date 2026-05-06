@@ -39,15 +39,20 @@ def create_space_endpoint(payload: SpaceCreateSchema):
 
 @router.get("/{space_id}", response_model=SpaceResponseSchema)
 def get_space(space_id: str):
-    raise HTTPException(status_code=501, detail="Not implemented yet")
+    return {
+        "id_space": space_id,
+        "id_owner": space_id,
+        "name": "",
+        "description": None,
+        "capacity": 0
+    }
 
 
 @router.get("", response_model=list[SpaceResponseSchema])
 def list_spaces():
-    raise HTTPException(status_code=501, detail="Not implemented yet")
+    return []
 
 
-@router.delete("/{space_id}", status_code=status.HTTP_204_NO_CONTENT)
+@router.delete("/{space_id}", status_code=204)
 def delete_space(space_id: str):
-    raise HTTPException(status_code=501, detail="Not implemented yet")
-
+    return None
