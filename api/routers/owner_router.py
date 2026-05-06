@@ -63,3 +63,18 @@ def login(payload: OwnerLoginSchema):
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail=str(exc),
         )
+    
+
+@router.get("/{owner_id}", response_model=OwnerResponseSchema)
+def get_owner(owner_id: str):
+    raise HTTPException(status_code=501, detail="Not implemented yet")
+
+
+@router.get("", response_model=list[OwnerResponseSchema])
+def list_owners():
+    raise HTTPException(status_code=501, detail="Not implemented yet")
+
+
+@router.delete("/{owner_id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_owner(owner_id: str):
+    raise HTTPException(status_code=501, detail="Not implemented yet")

@@ -37,3 +37,19 @@ def create_reservation_endpoint(payload: ReservationCreateSchema):
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=str(exc),
         )
+
+
+@router.get("/{reservation_id}", response_model=ReservationResponseSchema)
+def get_reservation(reservation_id: str):
+    raise HTTPException(status_code=501, detail="Not implemented yet")
+
+
+@router.get("", response_model=list[ReservationResponseSchema])
+def list_reservations():
+    raise HTTPException(status_code=501, detail="Not implemented yet")
+
+
+@router.delete("/{reservation_id}", status_code=status.HTTP_204_NO_CONTENT)
+def cancel_reservation(reservation_id: str):
+    raise HTTPException(status_code=501, detail="Not implemented yet")
+
