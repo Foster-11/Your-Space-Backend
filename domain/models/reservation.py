@@ -10,7 +10,7 @@ import sqlalchemy as sql
 import sqlalchemy.orm as orm
 from datetime import datetime
 
-import infrastructure.db.base as Base 
+from infrastructure.db.base import Base 
 
 
 
@@ -44,5 +44,5 @@ class Reservation(Base):
 
     space = orm.relationship(
         "Space", # nombre de la clase
-        back_populates="reservation" # vincula la relacion con Space.reservation
+        back_populates="reservations" # vincula la relacion con Space.reservation
     )

@@ -9,7 +9,7 @@ from sqlalchemy.dialects.postgresql import UUID
 import sqlalchemy as sql
 import sqlalchemy.orm as orm
 
-import infrastructure.db.base as Base 
+from infrastructure.db.base import Base
 
 
 class Space(Base):
@@ -24,14 +24,15 @@ class Space(Base):
     description = sql.Column(sql.String, index=True, nullable=True)
     capacity = sql.Column(sql.Integer, index=True, nullable=False)
     
-# Relaciones
-owner = orm.relationship(
-    "Owner", # Nombre de la clase
-    back_populates="spaces" 
-)
+    # Relaciones
+    owner = orm.relationship(
+        "Owner", # Nombre de la clase
+        back_populates="spaces" 
+    )
 
-reservation = orm.relationship( #vinculo visto en reservation.py
-    "Reservation", # nombre de la clase
-    back_populates="space", 
-    cascade="all, delete-orphan" # si se borra space, se borran todas sus reservas
-)
+
+    reservations = orm.relationship( #vinculo visto en reservation.py
+        "Reservation", # nombre de la clase
+        back_populates="space", 
+        cascade="all, delete-orphan" # si se borra space, se borran todas sus reservas
+    )
