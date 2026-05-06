@@ -16,3 +16,6 @@ coverage.xml
 
 #Environment
 .env
+
+# vscode file
+.vscode
