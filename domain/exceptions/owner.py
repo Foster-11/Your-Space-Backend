@@ -1,18 +1,16 @@
-# domain/exceptions/owner.py
-
-# qué son las excepciones y para qué sirven? 
-
 from domain.exceptions.base import DomainError
 
-class OwnerAlreadyExistError(DomainError):
+
+class OwnerAlreadyExistsError(DomainError):
     # Se lanza cuando el email ya existe
     pass
 
 
 class InvalidCredentialsError(DomainError):
-    # Credenciales no validas
+    # Credenciales no válidas
     pass
 
-class OwnerNotFound(DomainError):
+
+class OwnerNotFoundError(DomainError):
     # No se encuentra el owner solicitado
     pass

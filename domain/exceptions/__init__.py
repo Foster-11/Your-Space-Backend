@@ -4,13 +4,18 @@
 # permite importar las excepciones de forma limpia
 
 
+
 from domain.exceptions.base import DomainError
-from domain.exceptions.owner import OwnerAlreadyExistError, OwnerNotFound, InvalidCredentialsError
+from domain.exceptions.owner import (
+    OwnerAlreadyExistsError,
+    InvalidCredentialsError,
+    OwnerNotFoundError,
+)
 
-
-__all__ = [# define qué simbolos exporta públicamente del paquete
+__all__ = [
     "DomainError",
-    #"OwnerAlreadyExistsError",
+    "OwnerAlreadyExistsError",
     "InvalidCredentialsError",
-    "OwnerNotFound",
+    "OwnerNotFoundError",
 ]
+

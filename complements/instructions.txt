@@ -56,3 +56,8 @@ Ejecutar pruebas unitarias
 en consola: pytest
 
 LA INFORMACIÓN AQUÍ CONTENIDA SE ENCUENTRA EN LA DOCUMENTACIÓN OFICIAL
+
+
+
+(?)
+pip freeze > requirements.txt
