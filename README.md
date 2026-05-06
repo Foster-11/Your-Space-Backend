@@ -196,11 +196,40 @@ Fases del desarrollo del proyecto:
 4. crea owner
 5. devuelve owner
 
-
-
 ## **Login - api llama a este service**
 1. Recibe: email. password
 2. busca owner por email
 3. valida contraseña
 4. si falla - error de dominio
 5. si ok - return owner autenticado
+
+
+Continuación del desarrollo después de domain
+
+# API- Schemas primero  ← AHORA ESTÁS AQUÍ
+Dentro de api/:
+Definir qué recibe el sistema
+Definir qué devuelve
+Ocultar detalles del dominio (password, hashes, etc.)
+Normalizar nombres, formatos, errores
+Ejemplos:
+OwnerCreateSchema
+OwnerResponseSchema
+LoginSchema
+SpaceCreateSchema
+ReservationCreateSchema
+
+API – Routes (después de schemas)
+Una vez los schemas estén claros:
+los endpoints son simples
+no hay dudas de tipos
+el router solo orquesta
+
+Infrastructure (DESPUÉS de API)
+Ahora sí:
+Repositorios reales (SQLAlchemy)
+Session / engine
+Inyección de dependencias
+Implementar interfaces que hoy tienes fakeadas
+Infrastructure implementa lo que API + Domain ya definieron.
+Nunca al revés.
