@@ -4,9 +4,15 @@
 # app.py : registra routers y configura middleware
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from api.routers import routers
 
 
-app: FastAPI = FastAPI()
+app: FastAPI = FastAPI(
+    title="Your Space API",
+    version="1.0.0",
+    description="API para la gestión de spaces y reservations"
+)
+
 
 origins = ["*"]
 
@@ -21,3 +27,7 @@ app.add_middleware(
 @app.get("/")
 async def root():
     return {"message": "Hola, Susana"}
+
+
+for router in routers:
+    app.include_router(router)
