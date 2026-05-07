@@ -8,16 +8,27 @@
 ---
 ## Description
 
-YourSpace is a basic web app for all the events spaces owners. Here, you can manage your spaces. This is the backend of the project, and its created using FastAPI. Let's see step by step how to run it and take considarations
+YourSpace is a basic web app for all the events spaces owners. Here you can manage your spaces. This is the *backend* of the project, and its created using *FastAPI*. Let's see step by step how to run it and take considarations
 
 ---
 
 ## Setup
 
-### Prerequisites
+### Prerequisites and Technologies
 
+*Into your local machine:*
 - **Python 3.11.9**
-- **pip**
+- **pip (last version)**
+
+*Frameworks and relevant imports:*
+- **fastapi**
+- **psycopg2-binary**
+- **sqlalchemy**
+- **pytest**
+- **coverage** # for sonarqube reports
+- **pytest-cov**
+- **passlib**
+- **bcrypt**
 
 ### Step 1 — Clone the repository
 
