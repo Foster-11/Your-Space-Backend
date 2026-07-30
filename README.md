@@ -4,6 +4,14 @@
 ## 📋 Table of Contents
 
  - [Description](#Description)
+ - [Estructura del Backend](#estructura-del-backend)
+ - [Setup](#Setup)
+ - [How to run the project](#how-to-run-the-project)
+ - [SONARQUBE LOCAL](#sonarqube-local)
+ - [Ejecutar pruebas unitarias](#ejecutar-pruebas-unitarias)
+ - [Capas y Módulos](#capas-y-módulos)
+ - [Q&A](#qa)
+ - [Flujos](#flujos)
 
 ---
 ## Description
@@ -11,6 +19,77 @@
 YourSpace is a basic web app for all the events spaces owners. Here you can manage your spaces. This is the *backend* of the project, and its created using *FastAPI*. Let's see step by step how to run it and take considarations
 
 ---
+
+## Estructura del Backend
+
+```
+
+root/
+├── main.py
+│
+├── api/                    # Capa HTTP
+│   ├── app.py
+│   ├── routers/
+│   │   ├── __init__.py
+│   │   ├── owner_router.py
+│   │   ├── space_router.py
+│   │   └── reservation_router.py
+│   ├── schemas/            # Pydantic (request/response)
+│   │   ├── __init__.py
+│   │   ├── owner_schema.py
+│   │   ├── space_schema.py
+│   │   └── reservation_schema.py
+│
+├── complements/            # Archivos de documentación complementaria 
+│   ├── YourSpace-DbDiagram.dbml
+│   ├── instructions.txt
+├── domain/                 # Núcleo del negocio (TESTEABLE)
+│   ├── exceptions/
+│   │   ├── __init__.py
+│   │   ├── base.py
+│   │   ├── owner.py
+│   │   └── reservation.py
+│   ├── models/             # Entidades del negocio
+│   │   ├── owner.py
+│   │   ├── space.py
+│   │   └── reservation.py
+│   ├── repositories/      # mock infrastructure para resting
+│   │   └── fakes.py
+│   ├── security/
+│   │   ├── __init__.py
+│   │   └── password.py
+│   ├── services/           # Lógica del negocio
+│   │   ├── __init__.py
+│   │   ├── owner_service.py
+│   │   ├── space_service.py
+│   │   └── reservation_service.py
+│
+├── infrastructure/         # Detalles técnicos
+│   ├── db/
+│   │   ├── session.py      # conexión Neon/Postgres
+│   │   ├── base.py
+│   │   └── repositories/
+│   │       ├── owner_repository.py
+│   │       └── space_repository.py
+│   │       └── reservation_repository.py
+│   ├── broker/             # futuros eventos/mensajería
+│
+├── tests/
+│   ├── unit/
+│   │   ├── test_main.py
+│   │   ├── test_owner_service.py
+│   │   ├── test_reservation_service.py
+│   │   └── test_space_service.py
+│   ├── conftest.py        # configuración personalizada para testing - pytest
+│
+├── .env.template
+├── .gitignore
+├── requirements.txt
+└── README.md
+
+
+```
+
 
 ## Setup
 
@@ -126,64 +205,6 @@ pysonar --sonar-token=$SONAR_TOKEN
 pytest
  ```
 
-Estructura esperada: 
-
-```
-
-root/
-├── main.py
-│
-├── api/                    # Capa HTTP
-│   ├── app.py
-│   ├── routers/
-│   │   ├── owner_router.py
-│   │   ├── space_router.py
-│   │   └── reservation_router.py
-│   ├── schemas/            # Pydantic (request/response)
-│   │   ├── owner_schema.py
-│   │   └── space_schema.py
-│
-├── complements/            # Archivos de documentación complementaria 
-│   ├── YourSpace-DbDiagram.dbml
-│   ├── instructions.txt
-├── domain/                 # Núcleo del negocio (TESTEABLE)
-│   ├── exceptions/
-│   │   ├── base.py
-│   │   └── owner.py
-│   ├── models/             # Entidades del negocio
-│   │   ├── owner.py
-│   │   ├── space.py
-│   │   └── reservation.py
-│   ├── repositories/      # mock infrastructure para resting
-│   │   ├── fakes.py
-│   ├── security/
-│   │   └── password.py
-│   ├── services/           # Lógica del negocio
-│   │   ├── owner_service.py
-│   │   ├── space_service.py
-│   │   └── reservation_service.py
-│
-├── infrastructure/         # Detalles técnicos
-│   ├── db/
-│   │   ├── session.py      # conexión Neon/Postgres
-│   │   ├── base.py
-│   │   └── repositories/
-│   │       ├── owner_repository.py
-│   │       └── space_repository.py
-│   │       └── reservation_repository.py
-│   ├── broker/             # futuros eventos/mensajería
-│
-├── tests/
-│   ├── unit/
-│   │   ├── test_owner_service.py
-│   │   └── test_space_service.py
-│   ├── conftest.py        # configuración personalizada para testing - pytest
-│
-├── requirements.txt
-└── README.md
-
-
-```
 
 Fases del desarrollo del proyecto:
  
@@ -197,9 +218,11 @@ Fases del desarrollo del proyecto:
 8. Sonarqube **(Implementado localmente)**
 
 ---
-## Hablemos sobre las capas que componen este Backend y sus respectivos módulos
+## Capas y Módulos
 
-### Domain :
+**¿Qué es el archivo `__init__.py`?**
+
+### Domain : Es el corazón y cerebro del backend.
 **Módulos**
  * **exceptions:**
  * **repositories:**
@@ -207,7 +230,7 @@ Fases del desarrollo del proyecto:
  * **Services:**
  * **security:**
 
-### api : 
+### Api : 
 **Módulos**
  * **routers:**
  * **schemas:** La responsabilidad de este módulo es definir contratos. Las schemas cumplen 3 funciones críticas: 1. Definir el contrato externo del sistema (¿Qué campos recibe el sistema?¿cuáles son obligatorios?¿cuáles son opcionales?¿qué tipo exacto tiene cada campo?¿en qué formato salen los campos?).
@@ -234,19 +257,51 @@ Fases del desarrollo del proyecto:
     [ Schema (output) ]
         ↓
     HTTP Response
+    ```
+
+## Q&A
+**1. ¿Cómo inicia el servidor?**
+
+La ejecución inicia con `main.py` cuando ejecuta la función que inicia el servidor (`start()`) con uvicorn y esta función dirige al archivo ubicado en `api/app.py`
+
 ```
+main.py
+  ↓
+función start()
+  ↓
+uvicorn.run("api.app:app")
+  ↓
+FastAPI app vive en app.py
+```
+
+LA FUNCIÓN DE `app.py` ES RECIBIR LAS PETICIONES _**HTTP**_ Y DELEGARLAS A LOS MÓDULOS CORRECTOS
+
+`main.py` inicia el servidor y _define las configuraciones de ejecución_
+
+
+**2. ¿Qué son las configuraciones de ejecución de un servidor? - uvicorn**
+
+ESPACIO PARA RESPUESTA
+
+**3. ¿Cuál es la puerta de entrada HTTP?**
+
+Como se mencionó anteriormente, la puerta de entrada a las solicitudes *HTTP* que envía el usuario desde la interfaz (Frontend), es `app.py` y la función `app()`. Solo participa al inicio y/o al final del flujo, nunca decide "qué hacer" con el negocio
+
 ---
 
-# **domain/services/  -> Flujos**
+## **Flujos**
 
-## **Register - api llama a este service :**
+(Crear mapa de flujo con domain)
+
+### **Domain:**
+### **Register - api llama a este service :**
 1. Recibe name, email, password
 2. verifica: si existe email
 3. hashea contraseña
 4. crea owner
 5. devuelve owner
 
-## **Login - api llama a este service**
+### **Login - api llama a este service**
 1. Recibe: email. password
 2. busca owner por email
 3. valida contraseña
