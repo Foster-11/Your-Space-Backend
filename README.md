@@ -7,8 +7,6 @@
  - [Estructura del Backend](#estructura-del-backend)
  - [Setup](#Setup)
  - [How to run the project](#how-to-run-the-project)
- - [SONARQUBE LOCAL](#sonarqube-local)
- - [Ejecutar pruebas unitarias](#ejecutar-pruebas-unitarias)
  - [Capas y Módulos](#capas-y-módulos)
  - [Q&A](#qa)
  - [Flujos](#flujos)
@@ -182,29 +180,6 @@ The next URL show the documentation of this project
 
 
 ---
-## SONARQUBE LOCAL
-
-### 1. Doble click a StartSonar.bat dentro de la carpeta bin de SonarQube
-
-### 2. Log dentro de `http://localhost:9000`  con credenciales de sonarqube, hacer esto ejecutando el archivo .bat anteriormente mencionado
-
-### 3. GENERAR EL REPORTE QUE RECIBIRÁ SONARQUBE(hacer esto previamente al paso 4):
- ```bash
- pytest --cov=./ --cov-report=xml
-```
-
-4. Para ejecutar un Scann:  (ojo, debes tener instalado pysonar) 
- ```bash
-pysonar --sonar-token=$SONAR_TOKEN
- ```
-**Nota importante:** utilizar el archivo `.env.template`, crear una copia y renombrar como `.env` agregar valor de la variable `SONAR_TOKEN` por el token generado en sonarqube
-
----
-## Ejecutar pruebas unitarias
- ```bash
-pytest
- ```
-
 
 Fases del desarrollo del proyecto:
  
@@ -221,6 +196,11 @@ Fases del desarrollo del proyecto:
 ## Capas y Módulos
 
 **¿Qué es el archivo `__init__.py`?**
+Es un archivo que se coloca dentro de un paquete para indicar que esa carpeta debe ser tratada como tal.
+
+**Conceptos Básicos de: módulo, paquete y biblioteca**
+- **Módulo :** Cualquier archivo `.py` que contiene código python
+- **Paquete :**
 
 ### Domain : Es el corazón y cerebro del backend.
 **Módulos**
