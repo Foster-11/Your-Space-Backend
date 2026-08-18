@@ -36,4 +36,50 @@ Es una plataforma open source para realizar un análisis estático del código f
 
 El proceso de inspección estática genera informes detallados que proporcionan una visioón global sobre aspectos como la calidad técnina, la cobertura de pruebas y la detección temprana de posibles errores críticos.
 
+### ¿Qué es testeable en un backend?
+
+### ¿Qué es testeable en un sistema completo?
+
+### ¿Qué son pruebas Unitarias?
+
+### ¿Qué otro tipo de pruebas puedo ejecutar en mi sistema?
+
+### ¿Qué significa probar servicios antes que endpoints y cómo esto se relaciona con los tipos de test?
+
+### ¿Qué buenas practicas se pueden evicenciar en las pruebas aplicadas?
+
+¿FailFast en las pruebas?
+
+### ¿Qué es un `Fake Repository` y por qué es relevante en TDD?
+
+Hay que entender algo muy importante: El objetivo de una prueba unitaria es aislar el comportamiento que quiero validar.
+
+### ¿Qué son pruebas de integración? 
+
+Progresión de pruebas - Etapas:
+1. Pruebas Unitarias:
+Ejemplo:
+
+Probar servicio
+```
+register_owner()
+```
+
+Usando
+```
+FakeOwnerRepository
+```
+
+2. Pruebas de Integración 
+
+contra endpoints reales
+
+```
+TestClient(FastAPI)
+```
+
+3. Pruebas de Integración con postgreSQL
+
+4. Pruebas End-to-End
+
 

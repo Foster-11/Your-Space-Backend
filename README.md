@@ -1,5 +1,5 @@
 # YourSpace Backend
-
+> YourSpace es un laboratorio de ingeniería de software disfrazado de sistema de reservas
 
 ## 📋 Table of Contents
 
@@ -267,7 +267,14 @@ ESPACIO PARA RESPUESTA
 
 Como se mencionó anteriormente, la puerta de entrada a las solicitudes *HTTP* que envía el usuario desde la interfaz (Frontend), es `app.py` y la función `app()`. Solo participa al inicio y/o al final del flujo, nunca decide "qué hacer" con el negocio
 
+**4. ¿Qué es un release y cómo será abordado en Your-Space?**
+
+**5. ¿Qué es Service Layer y por qué aplica este patrón en YourSpace-Backend?**
+
+
 ---
+
+> ¡¡¡Migrar cada flujo a cada módulo correspondiente!!!
 
 ## **Flujos**
 
@@ -291,6 +298,8 @@ Como se mencionó anteriormente, la puerta de entrada a las solicitudes *HTTP* q
 
 Continuación del desarrollo después de domain
 
+---
+> Esta es una nota temporal para saber en qué parte del backend nos encontramos desarrollando
 # API- Schemas primero  ← AHORA ESTÁS AQUÍ
 Dentro de api/:
 Definir qué recibe el sistema

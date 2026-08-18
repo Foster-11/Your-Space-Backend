@@ -6,7 +6,7 @@
 # ORM: Object Relational Mapping,  técnica de programación utilizada para convertir datos 
 # entre sistemas de tipos incompatibles en lenguajes de programación orientados a objetos y bases de datos relacionales
 
-# owner.py
+# domain/models/owner.py
 from uuid import uuid4 
 from sqlalchemy.dialects.postgresql import UUID
 

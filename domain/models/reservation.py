@@ -2,7 +2,7 @@
 # ../models/: Entidades del negocio, no son tablas sino conceptos del negocio
 # reservation.py : Una reserva de un salón 
 
-# reservation.py
+# domain/models/reservation.py
 from uuid import uuid4 
 from sqlalchemy.dialects.postgresql import UUID
 

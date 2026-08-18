@@ -2,6 +2,7 @@
 
 # reservation_router.py : recibe request, valida datos con shemas y llama al servicio correspondiente
 
+# api/routers/reservation_router.py
 from fastapi import APIRouter, HTTPException, status
 
 from api.schemas import (
