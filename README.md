@@ -5,8 +5,8 @@
 
  - [Description](#Description)
  - [Estructura del Backend](#estructura-del-backend)
- - [Setup](#Setup)
- - [How to run the project](#how-to-run-the-project)
+ - [Setup](#setup)
+ - [Cómo correr el código](#cómo-correr-el-código)
  - [Capas y Módulos](#capas-y-módulos)
  - [Q&A](#qa)
  - [Flujos](#flujos)
@@ -91,58 +91,61 @@ root/
 
 ## Setup
 
-### Prerequisites and Technologies
+### Prerequisitos y Tecnologías
 
-*Into your local machine:*
+*En la máquina local:*
 - **Python 3.11.9**
 - **pip (last version)**
 
-*Frameworks and relevant imports:*
+*Frameworks e imports relevantes:*
 - **fastapi**
 - **psycopg2-binary**
 - **sqlalchemy**
 - **pytest**
-- **coverage** # for sonarqube reports
+- **coverage** *(para reportes en sonarqube)*
 - **pytest-cov**
 - **passlib**
 - **bcrypt**
 
-### Step 1 — Clone the repository
+### Paso 1 — Clonar el repositorio
 
-With HTTPS method (the most common) : 
+Método HTTPS (el más común) : 
 
 ```bash
 git clone https://github.com/Foster-11/Your-Space-Backend.git
 cd Your-Space-Backend
 ```
 
-With SSH (an advance method): 
+Con SSH (método avanzado): 
 ```bash
 git clone git@github.com:Foster-11/Your-Space-Backend.git
 cd Your-Space-Backend
 ```
 
 ### REALIZAR LOS PASOS DEL 2 AL 5 PARA CADA DISPOSITIVO DIFERENTE EN EL QUE CLONÓ EL REPOSITORIO
-### Step 2 — Create a virtual environment (just first time)
+### Paso 2 — Crear espacio virtual (Solo por 1ra vez)
 
 Las instrucciones para crear un ambiente virtual para implementar FastAPI está en la documentación oficial:
 ```
 https://fastapi.tiangolo.com/virtual-environments/#install-packages-directly
 ```
+
+Sin embargo, aquí también te indico cómo.
 #### **Crear entorno virtual**
 Asegurese de estar ubicado en el repositorio del proyecto
 ```bash
 python -m venv .venv
 ```
 
- - Asegurarse de esto antes de hacer un push!
-Iniciar repositorio en git y agregar al .gitignore el archivo .venv
+ - ***¡Asegurarse de esto antes de hacer un push!***
+Iniciar repositorio en git y agregar al `.gitignore` el archivo `.venv`
 ```bash
 echo "*" > .venv/.gitignore
 ```
 
-### Step 3 — Activar el entorno virtual
-Hacer esto cada que inicias la terminal para ejecutar tu proyecto
+### Paso 3 — Activar el entorno virtual
+Hacer esto cada que inicias la terminal para ejecutar tu proyecto, *este es un paso muy frecuente.*
+
 **terminal bash:**
 ```bash
 source .venv/Scripts/activate
@@ -153,12 +156,12 @@ source .venv/Scripts/activate
 .venv\Scripts\Activate.ps1
 ```
 
-### Step 4 — Actualizar a la última version el pip
+### Paso 4 — Actualizar a la última version el pip
 ```bash
 python -m pip install --upgrade pip
 ```
 
-### Step 5 — Instalar los paquetes por medio de requirements.txt
+### Paso 5 — Instalar los paquetes por medio de requirements.txt
 ```bash
 pip install -r requirements.txt
 ```
@@ -167,7 +170,7 @@ pip install -r requirements.txt
 
 ---
 
-## How to run the project
+## Cómo correr el código
 
 ```bash
 uvicorn main:start
@@ -175,22 +178,25 @@ uvicorn main:start
 
 
 
-The next URL show the documentation of this project
+En la siguiente url podrás encontrar la documentación generada por FastAPI del proyecto
+
 `http://127.0.0.1:8000/docs`
 
+[Volver arriba](#-table-of-contents)
 
 ---
 
-Fases del desarrollo del proyecto:
+Plan - Fases del desarrollo del proyecto:
  
-1. Definir reglas de negocio 
+1. Definir reglas de negocio (Paso conceptual)
 2. Levantar el servidor (Para nuestro caso, FastApi y uvicorn)
-3. Crear modelos y servicios (domain/)
-4. Primeros Tests de dominio
+3. Crear modelos y servicios (Empezar desarrolando todo el layer `domain/`)
+4. Primeros Tests de dominio (Unit tests)
 5. Implementar lógica mínima   - **Estado actual del repositorio**
-6. Creae routers, schemas 
-7. Conectar BD, Repositorios, SqlAlchemy
-8. Sonarqube **(Implementado localmente)**
+6. Creae routers, schemas (expandirse al layer `api/`)
+7. Sonarqube ***(Implementado localmente)***
+8. Conectar BD, Repositorios, SqlAlchemy
+
 
 ---
 ## Capas y Módulos

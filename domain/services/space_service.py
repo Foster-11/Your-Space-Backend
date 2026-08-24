@@ -2,7 +2,7 @@
 # ../services/: logica real,  reglas del negocio, lanzamiento de excepciones (fail fast + graceful handling)
 # space_service.py : reglas para los salones en el sistema - Entidad operativa
 
-# space_service.py
+# domain/services/space_service.py
 
 # Respondabilidades clave:
 # 1. Crear un space asociado a un owner - check

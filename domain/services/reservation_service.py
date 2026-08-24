@@ -2,7 +2,7 @@
 # ../services/: logica real,  reglas del negocio, lanzamiento de excepciones (fail fast + graceful handling)
 # reservation_service.py : reglas para las reservas en el sistema - Entidad núclep
 
-#reservation_service.py
+# domain/services/reservation_service.py
 
 # Respondabilidades clave:
 # 1. crear una reserva - check
