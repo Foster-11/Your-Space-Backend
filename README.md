@@ -236,18 +236,45 @@ YourSpace
 ├── Tests
 └── Database
 ```
-Todo forma parte de una única aplicación. Para principiantes como nosotros, es más fácil desarrollar al tener menor complejidad operativa. Sin embargo, a medida que nos volvamos  
+En un monolito, todo está dividido internamente en *módulos*  con *responsabilidades definidas*, en lugar de tener todo mezclado, se definen fronteras arquitectónicas. Cada *módulo* interactúa con el otro mediante contratos definidos. Cada *módulo* intenta comportarse como si fuera un sistema independiente. 
+
+
+Todo forma parte de una única aplicación. Para principiantes como nosotros, es más fácil desarrollar al tener menor complejidad operativa. Sin embargo, a medida que aprendamos más sobre la ingeniería de software, vale la pena completamente desarrollar programas más complejos.
+
+- **Arquitectura por capas**
+
+Consiste en dividir el sistema según responsabilidades, cada capa tiene una función específica dentro de la aplicación:
+
+```text
+HTTP Request
+      │
+      ▼
+┌───────────────┐
+│      API      │
+└───────┬───────┘
+        │
+        ▼
+┌───────────────┐
+│    Domain     │
+└───────┬───────┘
+        │
+        ▼
+┌───────────────┐
+│Infrastructure │
+└───────┬───────┘
+        │
+        ▼
+    PostgreSQL
+```
+
+
+
 
 ## 🧱 Capas y Módulos
 
-**¿Qué es el archivo `__init__.py`?**
-Es un archivo que se coloca dentro de un paquete para indicar que esa carpeta debe ser tratada como tal.
 
-**Conceptos Básicos de: módulo, paquete y biblioteca**
-- **Módulo :** Cualquier archivo `.py` que contiene código python
-- **Paquete :**
-
-### Domain : Es el corazón y cerebro del backend.
+### Domain (Capa)  
+Es el corazón y cerebro del backend. Aquí vive el conocimiento del negocio.
 **Módulos**
  * **exceptions:**
  * **repositories:**
@@ -255,10 +282,13 @@ Es un archivo que se coloca dentro de un paquete para indicar que esa carpeta de
  * **Services:**
  * **security:**
 
-### Api : 
+### Api (Capa)
+Responsable de exponer funcionalidades mediante HTTP.
+
 **Módulos**
  * **routers:**
- * **schemas:** La responsabilidad de este módulo es definir contratos. Las schemas cumplen 3 funciones críticas: 1. Definir el contrato externo del sistema (¿Qué campos recibe el sistema?¿cuáles son obligatorios?¿cuáles son opcionales?¿qué tipo exacto tiene cada campo?¿en qué formato salen los campos?).
+ * **schemas:** La responsabilidad de este módulo es definir contratos. Las schemas cumplen 3 funciones críticas: 
+ 1. Definir el contrato externo del sistema (¿Qué campos recibe el sistema?¿cuáles son obligatorios?¿cuáles son opcionales?¿qué tipo exacto tiene cada campo?¿en qué formato salen los campos?).
 
     Los schemas protegen el dominio. Un ejemplo conceptual teniendo como referencia este repositorio y su contexto de negocio: El dominio tiene un `Owner.pasword` (hash), la api NUNCA expone esa `password`. Esta decisión vive dentro de schemas, no en el dominio
 
@@ -283,6 +313,11 @@ Es un archivo que se coloca dentro de un paquete para indicar que esa carpeta de
         ↓
     HTTP Response
     ```
+
+
+### Infraestructure (Capa) 
+Contiene detalles técnicos. Su responsabilidad es implementar mecanismos concretos para acceder a recursos externos
+
 
 ## ❓Q&A
 **1. ¿Cómo inicia el servidor?**
@@ -322,6 +357,9 @@ Actualmente, bajo las reglas de negocio, your space puede percibirce como un *Mo
 Sin embargo, en el futuro, tiene todo lo necesario para escalar a una arquitectura Multi Tenancy. 
 
 La razón por la que no lo es ahora mismo, es porque el objetivo de este sistema es con fines educativos y prácticos, donde los usarios aprenden los conceptos básicos de la Ingeniería de Software de una manera más simple y digerida.
+
+**7. ¿Qué es el archivo `__init__.py`?**
+Es un archivo que se coloca dentro de un paquete para indicar que esa carpeta debe ser tratada como tal.
 
 ---
 
