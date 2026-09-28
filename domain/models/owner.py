@@ -1,5 +1,5 @@
 # domain/ : Razon de ser del sistema, nucleo del negocio testeable
-# owner.py : propietario de un salon o varios salones
+# owner : propietario de un salon o varios salones
 # ../models/: Entidades del negocio, no son tablas sino conceptos del negocio 
 
 # ORM con estilo de consulta Core con SQLAlchemy

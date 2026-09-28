@@ -28,7 +28,7 @@ def create_reservation(
         clien_email
         ):
     
-    if start_datetime >= end_datetime: #Regla de negocio
+    if end_datetime  <= start_datetime: #Regla de negocio
         raise ValueError("El inicio de la reserva debe estar antes que el fin de la reserva")
     
     space = space_repo.get_by_id(id_space)

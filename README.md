@@ -1,27 +1,40 @@
-# YourSpace Backend
-> YourSpace es un laboratorio de ingeniería de software disfrazado de sistema de reservas
+# 📘 YourSpace Backend
+> YourSpace es un laboratorio de ingeniería de software disfrazado de sistema de reservas 
+> ⚠️ ¡Documentación bilingüe!
 
 ## 📋 Table of Contents
 
- - [Description](#Description)
- - [Estructura del Backend](#estructura-del-backend)
- - [Setup](#setup)
- - [Cómo correr el código](#cómo-correr-el-código)
- - [Capas y Módulos](#capas-y-módulos)
- - [Q&A](#qa)
- - [Flujos](#flujos)
+ - [🗒️ Description](#Description)
+ - [🏛️ Technologies](#technologies)
+ - [🧩 Estructura del Backend](#estructura-del-backend)
+ - [⚙️ Setup](#setup)
+ - [💡Cómo correr el código](#cómo-correr-el-código)
+ - [🧱 Capas y Módulos](#capas-y-módulos)
+ - [❓ Q&A](#qa)
+ - [🛤️ Flujos](#flujos)
 
 ---
-## Description
+## 🗒️ Description
 
-YourSpace is a basic web app for all the events spaces owners. Here you can manage your spaces. This is the *backend* of the project, and its created using *FastAPI*. Let's see step by step how to run it and take considarations
+YourSpace is a basic web app for all the events spaces owners. Here you can manage your spaces. This is the *backend* of the project. Let's see step by step how it was built, what you can learn about foundations hight level software engiinering, how to run it and take considarations
 
----
 
-## Estructura del Backend
+## 🏛️ Technologies and Knowledges
 
+```text
+FastAPI
+PostgreSQL
+Pytest
+Alembic
+Docker
+GitHub Actions
+JWT
+Arquitectura por capas
 ```
 
+## 🧩 Estructura del Backend
+
+```
 root/
 ├── main.py
 │
@@ -79,17 +92,19 @@ root/
 │   │   ├── test_reservation_service.py
 │   │   └── test_space_service.py
 │   ├── conftest.py        # configuración personalizada para testing - pytest
+│   └── README.md          # Documentación de las pruebas realizadas
 │
 ├── .env.template
 ├── .gitignore
 ├── requirements.txt
+├── sonar-project.properties    # Configuración personalizada para sonarQube local
 └── README.md
 
 
 ```
 
 
-## Setup
+## ⚙️ Setup
 
 ### Prerequisitos y Tecnologías
 
@@ -170,7 +185,7 @@ pip install -r requirements.txt
 
 ---
 
-## Cómo correr el código
+## 💡 Cómo correr el código
 
 ```bash
 uvicorn main:start
@@ -199,7 +214,31 @@ Plan - Fases del desarrollo del proyecto:
 
 
 ---
-## Capas y Módulos
+
+## 🏛️ Arquitectura del Sistema
+
+- **¿Qué arquitectura utiliza YourSpace?**
+
+Actualmente, YourSpace está diseñado como un *Monolito Modular* que implementa una *Arquitectura por Capas*.
+
+Esta decisión fue tomada porque el objetivo principal del proyecto es aprender fundamentos sólidos de ingeniería de software antes de abordar arquitecturas más avanzadas como Event Sourcing, CQRS, Microservicios o Multi-Tenancy
+
+- **¿Qué es un Monolito?**
+
+Un monolito es una aplicación donde todos los componentes se despliegan como una sola unidad.
+
+Por ejemplo:
+```text
+YourSpace
+├── API
+├── Domain
+├── Infrastructure
+├── Tests
+└── Database
+```
+Todo forma parte de una única aplicación. Para principiantes como nosotros, es más fácil desarrollar al tener menor complejidad operativa. Sin embargo, a medida que nos volvamos  
+
+## 🧱 Capas y Módulos
 
 **¿Qué es el archivo `__init__.py`?**
 Es un archivo que se coloca dentro de un paquete para indicar que esa carpeta debe ser tratada como tal.
@@ -245,7 +284,7 @@ Es un archivo que se coloca dentro de un paquete para indicar que esa carpeta de
     HTTP Response
     ```
 
-## Q&A
+## ❓Q&A
 **1. ¿Cómo inicia el servidor?**
 
 La ejecución inicia con `main.py` cuando ejecuta la función que inicia el servidor (`start()`) con uvicorn y esta función dirige al archivo ubicado en `api/app.py`
@@ -277,12 +316,18 @@ Como se mencionó anteriormente, la puerta de entrada a las solicitudes *HTTP* q
 
 **5. ¿Qué es Service Layer y por qué aplica este patrón en YourSpace-Backend?**
 
+**6. ¿Qué será de Your Space en el Futuro?**
+
+Actualmente, bajo las reglas de negocio, your space puede percibirce como un *Monolito Modular*. 
+Sin embargo, en el futuro, tiene todo lo necesario para escalar a una arquitectura Multi Tenancy. 
+
+La razón por la que no lo es ahora mismo, es porque el objetivo de este sistema es con fines educativos y prácticos, donde los usarios aprenden los conceptos básicos de la Ingeniería de Software de una manera más simple y digerida.
 
 ---
 
 > ¡¡¡Migrar cada flujo a cada módulo correspondiente!!!
 
-## **Flujos**
+## 🛤️ **Flujos**
 
 (Crear mapa de flujo con domain)
 

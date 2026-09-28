@@ -10,7 +10,7 @@ from domain.repositories.fakes import FakeOwnerRepository
 # test 1: Registro exitoso de un owner
 
 """
- Este test valida:
+ Test 1 valida:
  1. Que se registre correctamente un owner con datos válidos
  2. Que el owner registrado tenga un email único (regla de negocio)
 """
@@ -23,7 +23,7 @@ def test_register_owner_successfully():
         name="Susana",
         last_name="Rios",
         email="susana@test.com",
-        password="plain_password"
+        password="plain_password123"
     )
 
     assert owner is not None

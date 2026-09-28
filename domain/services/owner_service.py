@@ -31,7 +31,7 @@ from domain.security import (
 
 def register_owner(
   *, # Fuerza el uso de parámetros nombrados
-  owner_repo, # abstraccion del acceso a datos, inyectada para desacoplar el dominio de la BD
+  owner_repo, # abstraccion del acceso a datos, inyectada para desacoplar el dominio de la BD (PARA UNIT TESTS)
   name: str,
   last_name: str,
   email: str,
