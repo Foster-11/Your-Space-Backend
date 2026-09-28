@@ -1,15 +1,13 @@
 # domain/ : Razon de ser del sistema, nucleo del negocio testeable
 # owner : propietario de un salon o varios salones
-# ../models/: Entidades del negocio, no son tablas sino conceptos del negocio 
+# ../models/: Entidades del negocio, no son tablas sino conceptos del negocio (Aunque en esta solucion mezclamos las entidades de negocio y entidades ORM)
 
-# ORM con estilo de consulta Core con SQLAlchemy
 # ORM: Object Relational Mapping,  técnica de programación utilizada para convertir datos 
 # entre sistemas de tipos incompatibles en lenguajes de programación orientados a objetos y bases de datos relacionales
 
 # domain/models/owner.py
 from uuid import uuid4 
 from sqlalchemy.dialects.postgresql import UUID
-
 import sqlalchemy as sql
 import sqlalchemy.orm as orm
 

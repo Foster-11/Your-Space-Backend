@@ -1,4 +1,5 @@
-# schemas/ : Contratos HTTP PARA VALIDAR INPUTS, DOCUMENTAR LA apia y serializar outputs
+# schemas/ : Contratos HTTP PARA VALIDAR INPUTS, DOCUMENTAR La API y serializar outputs
+# Traducir entre el mundo HTTP y el dominio.
 
 # api/schemas/owner_schema.py
 """
@@ -12,8 +13,8 @@ Expone:
 from uuid import UUID
 from pydantic import BaseModel, EmailStr, Field
 
-# Request
 
+# Request
 class OwnerCreateSchema(BaseModel):
     name: str = Field(..., min_length=1) # el ... indica que es obligatorio, min_length=1 para que no sea una cadena vacía
     last_name: str = Field(..., min_length=1)
@@ -23,11 +24,12 @@ class OwnerCreateSchema(BaseModel):
 
 class OwnerLoginSchema(BaseModel):
     email: EmailStr
-    password: str
+    password: str = Field(..., min_length=6)
+
+
 
 
 # Response
-
 class OwnerResponseSchema(BaseModel):
     id_owner: UUID
     name: str

@@ -8,7 +8,7 @@ from sqlalchemy.dialects.postgresql import UUID
 
 import sqlalchemy as sql
 import sqlalchemy.orm as orm
-from datetime import datetime
+
 
 from infrastructure.db.base import Base 
 
