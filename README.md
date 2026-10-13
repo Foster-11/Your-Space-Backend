@@ -1,106 +1,46 @@
 # 📘 YourSpace Backend
 > YourSpace es un laboratorio de ingeniería de software disfrazado de sistema de reservas 
+
 > ⚠️ ¡Documentación bilingüe!
 
 ## 📋 Table of Contents
 
  - [🗒️ Description](#Description)
  - [🏛️ Technologies](#technologies)
- - [🧩 Estructura del Backend](#estructura-del-backend)
  - [⚙️ Setup](#setup)
  - [💡Cómo correr el código](#cómo-correr-el-código)
+ - [🧩 Estructura del Backend](#-estructura-del-backend)
+ - [🏛️ Arquitectura del Sistema](#️-arquitectura-del-sistema)
  - [🧱 Capas y Módulos](#capas-y-módulos)
  - [❓ Q&A](#qa)
- - [🛤️ Flujos](#flujos)
+ - [🛤️ Flujos](#️-flujos)
 
 ---
 ## 🗒️ Description
 
-YourSpace is a basic web app for all the events spaces owners. Here you can manage your spaces. This is the *backend* of the project. Let's see step by step how it was built, what you can learn about foundations hight level software engiinering, how to run it and take considarations
+YourSpace is a basic web app for all the events spaces owners. Here you can manage your spaces. This is the -*backend*- project. Let's see step by step how it was built, what you can learn about software engiinering hight level foundations, how to run it and take considarations.
 
 
 ## 🏛️ Technologies and Knowledges
 
 ```text
 FastAPI
-PostgreSQL
 Pytest
+Unit tests
+Pydantic
 Alembic
+Arquitectura por capas
+SonarQube
+Uvicorn
+OpenAPI
+
+En progreso ------------------------> Próximo 
+
+LLM Local --> Chatbot
 Docker
 GitHub Actions
 JWT
-Arquitectura por capas
-```
-
-## 🧩 Estructura del Backend
-
-```
-root/
-├── main.py
-│
-├── api/                    # Capa HTTP
-│   ├── app.py
-│   ├── routers/
-│   │   ├── __init__.py
-│   │   ├── owner_router.py
-│   │   ├── space_router.py
-│   │   └── reservation_router.py
-│   ├── schemas/            # Pydantic (request/response)
-│   │   ├── __init__.py
-│   │   ├── owner_schema.py
-│   │   ├── space_schema.py
-│   │   └── reservation_schema.py
-│
-├── complements/            # Archivos de documentación complementaria 
-│   ├── YourSpace-DbDiagram.dbml
-│   ├── instructions.txt
-├── domain/                 # Núcleo del negocio (TESTEABLE)
-│   ├── exceptions/
-│   │   ├── __init__.py
-│   │   ├── base.py
-│   │   ├── owner.py
-│   │   └── reservation.py
-│   ├── models/             # Entidades del negocio
-│   │   ├── owner.py
-│   │   ├── space.py
-│   │   └── reservation.py
-│   ├── repositories/      # mock infrastructure para resting
-│   │   └── fakes.py
-│   ├── security/
-│   │   ├── __init__.py
-│   │   └── password.py
-│   ├── services/           # Lógica del negocio
-│   │   ├── __init__.py
-│   │   ├── owner_service.py
-│   │   ├── space_service.py
-│   │   └── reservation_service.py
-│
-├── infrastructure/         # Detalles técnicos
-│   ├── db/
-│   │   ├── session.py      # conexión Neon/Postgres
-│   │   ├── base.py
-│   │   └── repositories/
-│   │       ├── owner_repository.py
-│   │       └── space_repository.py
-│   │       └── reservation_repository.py
-│   ├── broker/             # futuros eventos/mensajería
-│
-├── tests/
-│   ├── unit/
-│   │   ├── test_main.py
-│   │   ├── test_owner_service.py
-│   │   ├── test_reservation_service.py
-│   │   └── test_space_service.py
-│   ├── conftest.py        # configuración personalizada para testing - pytest
-│   └── README.md          # Documentación de las pruebas realizadas
-│
-├── .env.template
-├── .gitignore
-├── requirements.txt
-├── sonar-project.properties    # Configuración personalizada para sonarQube local
-└── README.md
-
-
+PostgreSQL
 ```
 
 
@@ -113,14 +53,14 @@ root/
 - **pip (last version)**
 
 *Frameworks e imports relevantes:*
-- **fastapi**
-- **psycopg2-binary**
-- **sqlalchemy**
-- **pytest**
-- **coverage** *(para reportes en sonarqube)*
-- **pytest-cov**
-- **passlib**
-- **bcrypt**
+- **fastapi** --> web framework
+- **psycopg2-binary** --> Database adapter
+- **sqlalchemy** --> SQL and ORM features
+- **pytest** --> testing framework
+- **coverage** --> measuring code coverage
+- **pytest-cov** --> pytest plugin
+- **passlib** --> hashing password library
+- **bcrypt** --> password hashing algorithm
 
 ### Paso 1 — Clonar el repositorio
 
@@ -199,21 +139,79 @@ En la siguiente url podrás encontrar la documentación generada por FastAPI del
 
 [Volver arriba](#-table-of-contents)
 
----
-
-Plan - Fases del desarrollo del proyecto:
- 
-1. Definir reglas de negocio (Paso conceptual)
-2. Levantar el servidor (Para nuestro caso, FastApi y uvicorn)
-3. Crear modelos y servicios (Empezar desarrolando todo el layer `domain/`)
-4. Primeros Tests de dominio (Unit tests)
-5. Implementar lógica mínima   - **Estado actual del repositorio**
-6. Creae routers, schemas (expandirse al layer `api/`)
-7. Sonarqube ***(Implementado localmente)***
-8. Conectar BD, Repositorios, SqlAlchemy
 
 
----
+## 🧩 Estructura del Backend
+
+```
+root/
+├── main.py
+│
+├── api/                    # Capa HTTP
+│   ├── app.py
+│   ├── routers/
+│   │   ├── __init__.py
+│   │   ├── owner_router.py
+│   │   ├── space_router.py
+│   │   └── reservation_router.py
+│   ├── schemas/            # Pydantic (request/response)
+│   │   ├── __init__.py
+│   │   ├── owner_schema.py
+│   │   ├── space_schema.py
+│   │   └── reservation_schema.py
+│
+├── complements/            # Archivos de documentación complementaria 
+│   ├── YourSpace-DbDiagram.dbml
+│   ├── instructions.txt
+├── domain/                 # Núcleo del negocio (TESTEABLE)
+│   ├── exceptions/
+│   │   ├── __init__.py
+│   │   ├── base.py
+│   │   ├── owner.py
+│   │   └── reservation.py
+│   ├── models/             # Entidades del negocio
+│   │   ├── owner.py
+│   │   ├── space.py
+│   │   └── reservation.py
+│   ├── repositories/      # mock infrastructure para resting
+│   │   └── fakes.py
+│   ├── security/
+│   │   ├── __init__.py
+│   │   └── password.py
+│   ├── services/           # Lógica del negocio
+│   │   ├── __init__.py
+│   │   ├── owner_service.py
+│   │   ├── space_service.py
+│   │   └── reservation_service.py
+│
+├── infrastructure/         # Detalles técnicos
+│   ├── db/
+│   │   ├── session.py      # conexión Neon/Postgres
+│   │   ├── base.py
+│   │   └── repositories/
+│   │       ├── owner_repository.py
+│   │       └── space_repository.py
+│   │       └── reservation_repository.py
+│   ├── broker/             # futuros eventos/mensajería
+│
+├── tests/
+│   ├── unit/
+│   │   ├── test_main.py
+│   │   ├── test_owner_service.py
+│   │   ├── test_reservation_service.py
+│   │   └── test_space_service.py
+│   ├── conftest.py        # configuración personalizada para testing - pytest
+│   └── README.md          # Documentación de las pruebas realizadas
+│
+├── .env.template
+├── .gitignore
+├── requirements.txt
+├── sonar-project.properties    # Configuración personalizada para sonarQube local
+└── README.md
+
+
+```
+
 
 ## 🏛️ Arquitectura del Sistema
 
@@ -249,18 +247,18 @@ Consiste en dividir el sistema según responsabilidades, cada capa tiene una fun
 HTTP Request
       │
       ▼
-┌───────────────┐
-│      API      │
+┌────Module─────┐
+│      API      │---> HTTP requests and comunication
 └───────┬───────┘
         │
         ▼
-┌───────────────┐
-│    Domain     │
+┌────Module─────┐
+│    Domain     │---> Logical bussines
 └───────┬───────┘
         │
         ▼
-┌───────────────┐
-│Infrastructure │
+┌────Module─────┐
+│Infrastructure │--->
 └───────┬───────┘
         │
         ▼
@@ -361,6 +359,8 @@ La razón por la que no lo es ahora mismo, es porque el objetivo de este sistema
 **7. ¿Qué es el archivo `__init__.py`?**
 Es un archivo que se coloca dentro de un paquete para indicar que esa carpeta debe ser tratada como tal.
 
+**8. ¿Qué es FastAPI y qué problema resuelve?**
+Es un framework  moderno, su foco diferenciador de muchos otros es que FastAPI se enfoca en crear ***API HTTP*** de una manera sencilla, rápida y estructurada, utilizando las mismas funciones de python en los endpoints y decoradores. Una de las bondades más notorias de FastAPI, es que genera automaticamente la documentación propia de las API's por medio del formato OpenAPI, la cual utiliza la UI de swagger y nos ahorra el uso de herramientas como Postman
 ---
 
 > ¡¡¡Migrar cada flujo a cada módulo correspondiente!!!
@@ -416,3 +416,18 @@ Inyección de dependencias
 Implementar interfaces que hoy tienes fakeadas
 Infrastructure implementa lo que API + Domain ya definieron.
 Nunca al revés.
+
+
+
+---
+
+Plan - Fases del desarrollo del proyecto:
+ 
+1. Definir reglas de negocio (Paso conceptual)
+2. Levantar el servidor (Para nuestro caso, FastApi y uvicorn)
+3. Crear modelos y servicios (Empezar desarrolando todo el layer `domain/`)
+4. Primeros Tests de dominio (Unit tests)
+5. Implementar lógica mínima   - **Estado actual del repositorio**
+6. Creae routers, schemas (expandirse al layer `api/`)
+7. Sonarqube ***(Implementado localmente)***
+8. Conectar BD, Repositorios, SqlAlchemy

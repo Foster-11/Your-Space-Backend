@@ -23,10 +23,15 @@ from domain.exceptions import (
 router = APIRouter(prefix="/owners", tags=["Owners"])
 
 
+"""
+response_model=OwnerResponseSchema : Indica que la respuesta de este endpoint debe ser un objeto que cumpla con el esquema OwnerResponseSchema. Esto ayuda a FastAPI a validar y documentar la respuesta de la API, asegurando que los clientes reciban datos en el formato esperado.
+
+status_code=status.HTTP_201_CREATED : Indica que se ha creado un nuevo recurso (en este caso, un nuevo propietario) como resultado de la solicitud POST. Esto es útil para que los clientes de la API sepan que su solicitud fue exitosa y que se ha creado un nuevo recurso en el servidor.
+"""
 @router.post(
     "",
-    response_model=OwnerResponseSchema, # Indica que la respuesta de este endpoint debe ser un objeto que cumpla con el esquema OwnerResponseSchema. Esto ayuda a FastAPI a validar y documentar la respuesta de la API, asegurando que los clientes reciban datos en el formato esperado.
-    status_code=status.HTTP_201_CREATED, # Indica que se ha creado un nuevo recurso (en este caso, un nuevo propietario) como resultado de la solicitud POST. Esto es útil para que los clientes de la API sepan que su solicitud fue exitosa y que se ha creado un nuevo recurso en el servidor.
+    response_model=OwnerResponseSchema,
+    status_code=status.HTTP_201_CREATED,
 )
 def create_owner(payload: OwnerCreateSchema):
     try:
@@ -67,7 +72,10 @@ def login(payload: OwnerLoginSchema):
     
 
 
-@router.get("/{owner_id}", response_model=OwnerResponseSchema)
+@router.get(
+    "/{owner_id}", 
+    response_model=OwnerResponseSchema
+)
 def get_owner(owner_id: str):
     # implementación mínima consciente
     return {
@@ -80,14 +88,20 @@ def get_owner(owner_id: str):
 
 
 
-@router.get("", response_model=list[OwnerResponseSchema])
+@router.get(
+    "",
+    response_model=list[OwnerResponseSchema],
+)
 def list_owners():
     return []
 
 
 
 
-@router.delete("/{owner_id}", status_code=204)
+@router.delete(
+    "/{owner_id}", 
+    status_code=204
+)
 def delete_owner(owner_id: str):
     return None
 
