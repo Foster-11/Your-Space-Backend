@@ -234,10 +234,10 @@ YourSpace
 ├── Tests
 └── Database
 ```
-En un monolito, todo está dividido internamente en *módulos*  con *responsabilidades definidas*, en lugar de tener todo mezclado, se definen fronteras arquitectónicas. Cada *módulo* interactúa con el otro mediante contratos definidos. Cada *módulo* intenta comportarse como si fuera un sistema independiente. 
+En un monolito **modular**, todo está dividido internamente con *responsabilidades definidas*, en lugar de tener todo mezclado como un simple **monolito**. Se definen fronteras arquitectónicas. Cada *módulo* interactúa con el otro mediante contratos definidos. Estpan fuertemente ligados al Domain Driven Desing
 
 
-Todo forma parte de una única aplicación. Para principiantes como nosotros, es más fácil desarrollar al tener menor complejidad operativa. Sin embargo, a medida que aprendamos más sobre la ingeniería de software, vale la pena completamente desarrollar programas más complejos.
+Para principiantes como nosotros, es más fácil desarrollar al tener menor complejidad operativa. Sin embargo, a medida que aprendamos más sobre la ingeniería de software, vale la pena completamente desarrollar programas más complejos.
 
 - **Arquitectura por capas**
 
@@ -270,10 +270,18 @@ HTTP Request
 
 ## 🧱 Capas y Módulos
 
+### Aplication Entry Point
+
+No es una capa como tal, pero es lo suficientemente relevante como para profundizarla aquí. Esta sección del sistema está compuesto por aquellos archivos que ayudan a encender los motores de nuestra aplicación: `main.py` y `api/app.py`. Son el mecanismo de arranque del servidor HTTP.
+
+En `main.py` es el punto de entrada, allí se inicia el servidor ASCI (Asynchronous Server Gateway Interface) de uvicorn que expone la aplicación FastAPI para recibir tráfico HTTP. 
+
+En `api/app.py` se crea la instancia de FastAPI, se configura la documentación OpenAPI, registra el middleware y los routers, y se configura el comportamiento HTTP global 
+
 
 ### Domain (Capa)  
 Es el corazón y cerebro del backend. Aquí vive el conocimiento del negocio.
-**Módulos**
+**Páquetes**
  * **exceptions:**
  * **repositories:**
  * **Models:**
@@ -361,6 +369,7 @@ Es un archivo que se coloca dentro de un paquete para indicar que esa carpeta de
 
 **8. ¿Qué es FastAPI y qué problema resuelve?**
 Es un framework  moderno, su foco diferenciador de muchos otros es que FastAPI se enfoca en crear ***API HTTP*** de una manera sencilla, rápida y estructurada, utilizando las mismas funciones de python en los endpoints y decoradores. Una de las bondades más notorias de FastAPI, es que genera automaticamente la documentación propia de las API's por medio del formato OpenAPI, la cual utiliza la UI de swagger y nos ahorra el uso de herramientas como Postman
+
 ---
 
 > ¡¡¡Migrar cada flujo a cada módulo correspondiente!!!

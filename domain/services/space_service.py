@@ -39,7 +39,7 @@ def create_space(
     - La capacidad debe ser mayor que cero
     """
     #Validar que el owner exista
-    owner = owner_repo.get_by_id(id_owner)
+    owner = owner_repo.get_owner_by_id(id_owner)
     if not owner:
         raise ValueError("Owner no existe")
     

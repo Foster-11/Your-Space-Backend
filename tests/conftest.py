@@ -15,6 +15,6 @@ import sys
 import os
 
 sys.path.insert(
-    0, # Qué siginifica?
+    0,# Indica que esta ruta se agregará al inicio de sys.path, priorizando su búsqueda sobre otras rutas.
     os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 )

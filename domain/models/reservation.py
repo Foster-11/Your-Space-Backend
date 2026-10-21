@@ -39,6 +39,7 @@ class Reservation(Base):
     event_description = sql.Column(sql.String(255), nullable=True)
     client_name = sql.Column(sql.String(255), nullable=False)
     client_email = sql.Column(sql.String(120), nullable=False)
+    expected_attendees = sql.Column(sql.Integer, nullable=False)
 
     # Relaciones
 

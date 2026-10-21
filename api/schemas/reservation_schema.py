@@ -18,8 +18,10 @@ class ReservationCreateSchema(BaseModel):
     start_datetime: datetime
     end_datetime: datetime
     event_name: str = Field(..., min_length=1) # el ... indica que es obligatorio, min_length=1 para que no sea una cadena vacía
+    event_description: str = Field(..., min_length=1)
     client_name: str = Field(..., min_length=1) # el ... indica que es obligatorio, min_length=1 para que no sea una cadena vacía
     client_email: str
+    expected_attendees: int = Field(..., gt=0) # el ... indica que es obligatorio, gt=0 para que sea un número positivo
 
     class Config: # Permite agregar ejemplos a la documentación de la API, lo que facilita a los desarrolladores entender cómo usar el endpoint y qué tipo de datos se espera en la solicitud.
         json_schema_extra = {
@@ -28,8 +30,10 @@ class ReservationCreateSchema(BaseModel):
                 "start_datetime": "2026-04-20T10:00:00",
                 "end_datetime": "2026-04-20T12:00:00",
                 "event_name": "Reunión de proyecto",
+                "event_description": "Definir los objetivos del proyecto",
                 "client_name": "Juan Pérez",
-                "client_email": "juan@test.com"
+                "client_email": "juan@test.com",
+                "expected_attendees": 10
             }
         }
 

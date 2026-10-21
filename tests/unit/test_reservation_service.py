@@ -31,8 +31,10 @@ def test_create_reservation_successfully():
         start_datetime=start,
         end_datetime=end,
         event_name="Evento",
+        event_description="Descripción del evento",
         client_name="Cliente",
-        clien_email="cliente@test.com"
+        client_email="cliente@test.com",
+        expected_attendees=10
     )
 
     assert reservation is not None
@@ -57,8 +59,10 @@ def test_create_reservation_space_not_found():
             start_datetime=start,
             end_datetime=end,
             event_name="Evento",
+            event_description="Descripción del evento",
             client_name="Cliente",
-            clien_email="cliente@test.com"
+            client_email="cliente@test.com",
+            expected_attendees=10
         )
 
 #test 3: Creación de una reserva con fechas inválidas (end antes de start)
@@ -88,6 +92,8 @@ def test_create_reservation_overlapping():
             start_datetime=start,
             end_datetime=end,
             event_name="Evento",
+            event_description="Descripción del evento",
             client_name="Cliente",
-            clien_email="cliente@test.com"
+            client_email="cliente@test.com",
+            expected_attendees=10
         )

@@ -11,11 +11,26 @@ from domain.exceptions.owner import (
     InvalidCredentialsError,
     OwnerNotFoundError,
 )
+from domain.exceptions.reservation import (
+    InvalidDateError,
+    SpaceNotExistsError,
+    OverlappingReservationError,
+    ExceedCapacityError,
+    ReservationNotFound,
+    ReservationCancellationWindowExpiredError
+)
+
 
 __all__ = [
     "DomainError",
     "OwnerAlreadyExistsError",
     "InvalidCredentialsError",
     "OwnerNotFoundError",
+    "InvalidDateError",
+    "SpaceNotExistsError",
+    "OverlappingReservationError",
+    "ExceedCapacityError",
+    "ReservationNotFound",
+    "ReservationCancellationWindowExpiredError"
 ]
 
