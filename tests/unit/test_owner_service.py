@@ -8,13 +8,6 @@ from domain.exceptions import OwnerAlreadyExistsError, InvalidCredentialsError
 from domain.repositories.fakes import FakeOwnerRepository
 
 # test 1: Registro exitoso de un owner
-
-"""
- Test 1 valida:
- 1. Que se registre correctamente un owner con datos válidos
- 2. Que el owner registrado tenga un email único (regla de negocio)
-"""
-
 def test_register_owner_successfully():
     owner_repo = FakeOwnerRepository()
 
@@ -26,8 +19,8 @@ def test_register_owner_successfully():
         password="plain_password123"
     )
 
-    assert owner is not None
-    assert owner.email == "susana@test.com"
+    assert owner is not None # Verifica que se haya creado un owner
+    assert owner.email == "susana@test.com" # Verifica que el email del owner sea el esperado
 
 
 # test 2: Registro de un owner con email ya existente

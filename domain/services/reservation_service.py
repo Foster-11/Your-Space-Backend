@@ -10,8 +10,11 @@
 # 3. validar solapamientos de fechas - check
 # 4. validar fechas coherentes (overlapping, dont create reserve for past) - check
 # 5. validar capacidad del espacio con la reserva - check
-# 6. cancelar reserva - pending
-# 7. listar reservas de un space - pending
+# 6. cancelar reserva (o sea, eliminar una reserva existente)
+# 7. listar reservas de un space sin vencer
+# 8. listar reservas por cliente sin vencer
+# 9. listar reservas ya vencidas de un space
+# 10 listar reservas totales de un space
 
 from domain.models.reservation import Reservation
 from domain.exceptions.reservation import (

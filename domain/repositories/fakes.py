@@ -44,7 +44,7 @@ class FakeOwnerRepository:
  #-----------SPACE-----------------
 class FakeSpaceRepository:
     def __init__(self):
-        # Inicializa una lista vacía para almacenar spaces en memoria..
+        # Inicializa un diccionario vacío para almacenar spaces en memoria..
         self.spaces = {}
  
     def add(self, space):
@@ -69,7 +69,7 @@ class FakeSpaceRepository:
 class FakeReservationRepository:
     def __init__(self):
         self.reservations = {}
-        self.overlapping = False
+
 
     def exists_overlap(
     self,
