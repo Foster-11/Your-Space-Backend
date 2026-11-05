@@ -42,3 +42,24 @@ Base
 > Nota que a través de `Base`, vamos centralizando lo que podemos hacer más adelante en la capa de infrastructure
 
 > Las entidades de dominio terminan dependiendo de Infrastructure al existir esta herencia, por lo que podemos concluir que las `entidades de dominio` también son a su vez `entidades ORM`
+
+
+## Connection Pooling
+Esto es un tema muy interesante que descubrí sobre la marcha en la construcción de este repo. Este concepto surge a raiz de un problema.
+Primero describamos el problema: En Oracle, SQL Server, PostgreSQL o MySQL cada conexión activa consume memoria de manera persistente y compite por recursos del kernel. Multiplica eso por cientos de microservicios, cada uno con su propio pool, cada uno escalando dinámicamente, cada uno reconectándose ante cualquier fallo transitorio, y obtienes el escenario que llena los foros de soporte: bases de datos que se quedan sin conexiones disponibles, aplicaciones que esperan eternamente, y equipos de infraestructura que reaccionan subiendo el límite de max_connections sin entender que están alimentando al problema, no resolviéndolo.
+
+El connection pooling nació precisamente para evitar ese desperdicio: mantener un conjunto reducido de conexiones físicas reutilizables que las aplicaciones toman, usan y devuelven al pool sin pagar el costo de abrir y cerrar cada vez. Es una idea simple. Su implementación correcta, no tanto
+
+
+Información tomada de :
+```
+https://dbaexperts.tech/rendimiento-y-optimizacion/connection-pooling-y-gestion-de-conexiones/
+```
+
+Más información útil en :
+```
+https://stackpractices.com/es/guides/connection-pooling-deep-dive-guide/
+```
+
+
+> Recomiendo hacer las lecturas completas e indagar

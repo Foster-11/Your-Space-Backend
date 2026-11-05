@@ -19,3 +19,4 @@ coverage.xml
 
 # vscode file
 .vscode
+.env.local

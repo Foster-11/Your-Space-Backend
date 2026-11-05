@@ -10,7 +10,7 @@ from api.routers import routers
 app: FastAPI = FastAPI(
     title="Your Space API",
     version="1.0.0",
-    description="API para la gestión de spaces y reservations"
+    description="Your Space API"
 )
 
 # esto debe cambiar en producción/otros ambientes para restringir los orígenes permitidos
