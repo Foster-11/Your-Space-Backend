@@ -121,7 +121,13 @@ python -m pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
+```bash
+# Neon CLI
+npm i -g neon
+```
+> Esto lo hice porque escogí administar los datos del sistema con Neon
 
+> Para utilizar Neon CLI necesitas `Node.js 20.19`+
 
 ---
 
