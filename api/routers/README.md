@@ -9,6 +9,16 @@
 
 NO toma decisiones de negocio, su trabajo es *coordinar*.
 
+Esta lista describe la responsabilidad prevista del router. En el estado actual
+del código, la integración HTTP está incompleta: varios endpoints de creación
+pasan `None` como repositorio, y algunas operaciones de lectura/eliminación
+devuelven valores de ejemplo o vacíos. Por eso no debe interpretarse que todos
+los endpoints ya consultan o modifican datos persistidos.
+
+Cuando se conecte la infraestructura, la capa de composición/API deberá proveer
+una sesión y los repositorios concretos a los servicios. El router no debería
+construir consultas SQL ni decidir reglas de negocio.
+
 
 ## Análisis de imports
 
@@ -68,5 +78,4 @@ def create_owner(payload: OwnerCreateSchema):
 Este import de FastAPI proviene directamente de `Starlette`. Son un grupo de constantes ya definidas con códigos representados por variables tipo `int`, por ejemplo: `status.HTTP_200_OK` para representar el código HTTP 200
 
 Según la misma documentación de `FastAPI`, los status codes registrados que podemos usar para nuestros desarrollos los puedes encontrar aquí -> [Hypertext Transfer Protocol (HTTP) Status Code Registry](https://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml) Y [RFC 9110: STD 97: HTTP Semantics](https://www.rfc-editor.org/rfc/rfc9110)
-
 

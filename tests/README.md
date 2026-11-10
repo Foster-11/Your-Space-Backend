@@ -10,18 +10,29 @@
 
 ### 1. Doble click a `StartSonar.bat` dentro de la carpeta `bin` de SonarQube alojado en la ruta que estableciste en tu explorador de archivos
 
-### 2. Log dentro de `http://localhost:9000`  con credenciales de sonarqube, hacer esto ejecutando el archivo `.bat` anteriormente mencionado
+### 2. Inicia sesión en `http://localhost:9000` con las credenciales de SonarQube después de ejecutar el archivo `.bat`
 
 ### 3. GENERAR EL REPORTE QUE RECIBIRÁ SONARQUBE (hacer esto previamente al paso 4):
  ```bash
  pytest --cov=./ --cov-report=xml
 ```
 
-### 4. Para ejecutar un Scann:  (ojo, debes tener instalado pysonar) 
+### 4. Para ejecutar un scan (requiere tener `pysonar` instalado)
+
+Define `SONAR_TOKEN` en la terminal que ejecutará el scanner. No es necesario
+guardar el token en el archivo `.env` de la aplicación.
+
+**Bash:**
  ```bash
-pysonar --sonar-token=$SONAR_TOKEN
+export SONAR_TOKEN="<token>"
+pysonar --sonar-token="$SONAR_TOKEN"
  ```
-**Nota importante:** utilizar el archivo `.env.template`, crear una copia y renombrar como `.env` agregar valor de la variable `SONAR_TOKEN` por el token generado en sonarqube
+
+**PowerShell:**
+ ```powershell
+$env:SONAR_TOKEN = "<token>"
+pysonar --sonar-token=$env:SONAR_TOKEN
+ ```
 
 ---
 ## Ejecutar pruebas unitarias
@@ -81,5 +92,4 @@ TestClient(FastAPI)
 3. Pruebas de Integración con postgreSQL
 
 4. Pruebas End-to-End
-
 

@@ -26,9 +26,9 @@ YourSpace is a basic web app for all the events spaces owners. Here you can mana
 ```text
 FastAPI
 Pytest
-Unit tests
 Pydantic
-Alembic
+SQLAlchemy
+PostgreSQL (Neon configurado; integración en construcción)
 Arquitectura por capas
 SonarQube
 Uvicorn
@@ -40,7 +40,7 @@ LLM Local --> Chatbot
 Docker
 GitHub Actions
 JWT
-PostgreSQL
+Alembic
 ```
 
 
@@ -134,14 +134,21 @@ npm i -g neon
 ## 💡 Cómo correr el código
 
 ```bash
-uvicorn main:start
+python main.py
+```
+
+El comando anterior usa la función `start()` de `main.py` y configura Uvicorn
+en `127.0.0.1:8070`. También se puede iniciar directamente la aplicación ASGI:
+
+```bash
+uvicorn api.app:app --host 127.0.0.1 --port 8070 --reload
 ```
 
 
 
 En la siguiente url podrás encontrar la documentación generada por FastAPI del proyecto
 
-`http://127.0.0.1:8000/docs`
+`http://127.0.0.1:8070/docs`
 
 [Volver arriba](#-table-of-contents)
 
@@ -175,11 +182,11 @@ root/
 │   │   ├── base.py
 │   │   ├── owner.py
 │   │   └── reservation.py
-│   ├── models/             # Entidades del negocio
+│   ├── models/             # Dataclasses del dominio, sin dependencia ORM
 │   │   ├── owner.py
 │   │   ├── space.py
 │   │   └── reservation.py
-│   ├── repositories/      # mock infrastructure para resting
+│   ├── repositories/      # Fakes en memoria para pruebas unitarias
 │   │   └── fakes.py
 │   ├── security/
 │   │   ├── __init__.py
@@ -192,11 +199,12 @@ root/
 │
 ├── infrastructure/         # Detalles técnicos
 │   ├── db/
-│   │   ├── session.py      # conexión Neon/Postgres
-│   │   ├── base.py
+│   │   ├── session.py      # configuración del engine SQLAlchemy
+│   │   ├── base.py         # Base declarativa de SQLAlchemy
+│   │   ├── models/         # Modelos ORM y relaciones
 │   │   └── repositories/
 │   │       ├── owner_repository.py
-│   │       └── space_repository.py
+│   │       ├── space_repository.py
 │   │       └── reservation_repository.py
 │   ├── broker/             # futuros eventos/mensajería
 │
@@ -223,7 +231,9 @@ root/
 
 - **¿Qué arquitectura utiliza YourSpace?**
 
-Actualmente, YourSpace está diseñado como un *Monolito Modular* que implementa una *Arquitectura por Capas*.
+YourSpace está organizado como un monolito con módulos y capas. La separación
+está en desarrollo: algunas rutas HTTP aún usan valores de ejemplo y todavía no
+están conectadas con los repositorios SQLAlchemy.
 
 Esta decisión fue tomada porque el objetivo principal del proyecto es aprender fundamentos sólidos de ingeniería de software antes de abordar arquitecturas más avanzadas como Event Sourcing, CQRS, Microservicios o Multi-Tenancy
 
@@ -240,7 +250,12 @@ YourSpace
 ├── Tests
 └── Database
 ```
-En un monolito **modular**, todo está dividido internamente con *responsabilidades definidas*, en lugar de tener todo mezclado como un simple **monolito**. Se definen fronteras arquitectónicas. Cada *módulo* interactúa con el otro mediante contratos definidos. Estpan fuertemente ligados al Domain Driven Desing
+En un monolito **modular**, los módulos tienen responsabilidades diferenciadas
+y se comunican mediante fronteras explícitas. En este repositorio, los servicios
+usan operaciones de repositorio por convención; todavía no hay interfaces
+formales para esos repositorios. Esta organización puede complementarse con
+conceptos de Domain-Driven Design, pero no implica que el sistema implemente
+completamente ese enfoque.
 
 
 Para principiantes como nosotros, es más fácil desarrollar al tener menor complejidad operativa. Sin embargo, a medida que aprendamos más sobre la ingeniería de software, vale la pena completamente desarrollar programas más complejos.
@@ -250,27 +265,22 @@ Para principiantes como nosotros, es más fácil desarrollar al tener menor comp
 Consiste en dividir el sistema según responsabilidades, cada capa tiene una función específica dentro de la aplicación:
 
 ```text
-HTTP Request
-      │
-      ▼
-┌────Module─────┐
-│      API      │---> HTTP requests and comunication
-└───────┬───────┘
-        │
-        ▼
-┌────Module─────┐
-│    Domain     │---> Logical bussines
-└───────┬───────┘
-        │
-        ▼
-┌────Module─────┐
-│Infrastructure │--->
-└───────┬───────┘
-        │
-        ▼
-    PostgreSQL
+HTTP request
+     │
+     ▼
+API (schemas y routers)
+     │ invoca servicios y les provee repositorios
+     ▼
+Domain (servicios, modelos y comportamiento esperado del repositorio)
+     ▲
+     │ implementación de persistencia
+Infrastructure (repositorios SQLAlchemy y modelos ORM)
+     │
+     ▼
+PostgreSQL
 ```
-
+Para ver la diferencia entre dataclasses, ORM y repositorios, consulta
+[la guía de infraestructura](./infrastructure/README.md).
 
 
 
@@ -280,7 +290,9 @@ HTTP Request
 
 No es una capa como tal, pero es lo suficientemente relevante como para profundizarla aquí. Esta sección del sistema está compuesto por aquellos archivos que ayudan a encender los motores de nuestra aplicación: `main.py` y `api/app.py`. Son el mecanismo de arranque del servidor HTTP.
 
-En `main.py` es el punto de entrada, allí se inicia el servidor ASCI (Asynchronous Server Gateway Interface) de uvicorn que expone la aplicación FastAPI para recibir tráfico HTTP. 
+En `main.py` está el punto de entrada opcional para iniciar Uvicorn, un servidor
+ASGI (Asynchronous Server Gateway Interface) que expone la aplicación FastAPI
+para recibir tráfico HTTP.
 
 En `api/app.py` se crea la instancia de FastAPI, se configura la documentación OpenAPI, registra el middleware y los routers, y se configura el comportamiento HTTP global 
 
@@ -302,18 +314,23 @@ Responsable de exponer funcionalidades mediante HTTP.
  * **schemas:** La responsabilidad de este módulo es definir contratos. Las schemas cumplen 3 funciones críticas: 
  1. Definir el contrato externo del sistema (¿Qué campos recibe el sistema?¿cuáles son obligatorios?¿cuáles son opcionales?¿qué tipo exacto tiene cada campo?¿en qué formato salen los campos?).
 
-    Los schemas protegen el dominio. Un ejemplo conceptual teniendo como referencia este repositorio y su contexto de negocio: El dominio tiene un `Owner.pasword` (hash), la api NUNCA expone esa `password`. Esta decisión vive dentro de schemas, no en el dominio
+    Los schemas controlan qué campos se reciben o se exponen. Por ejemplo,
+    `OwnerResponseSchema` no incluye la contraseña. La aplicación debe seguir
+    almacenando únicamente la contraseña hasheada, y el servicio es responsable
+    de aplicar las reglas del dominio.
 
-    Traducen entre reglas internas del domain y el mundo exterior (HTTP/Usuario)
+    Los schemas traducen entre el formato HTTP y los objetos que usa la
+    aplicación. Sus validaciones de tipos y formatos no sustituyen las reglas
+    de negocio.
 
-    #### Flujo donde encajan los schemas en el sistema
+    #### Flujo objetivo donde encajan los schemas en el sistema
 
     ```
     HTTP Request
         ↓
     [ Schema (input) ]
         ↓
-    [ API Route ]
+    [ API Route / serialización ]
         ↓
     [ Domain Service ]
         ↓
@@ -328,13 +345,18 @@ Responsable de exponer funcionalidades mediante HTTP.
 
 
 ### Infraestructure (Capa) 
-Contiene detalles técnicos. Su responsabilidad es implementar mecanismos concretos para acceder a recursos externos
+Contiene detalles técnicos. En `infrastructure/db/` están el engine y la sesión
+SQLAlchemy, los modelos ORM y los repositorios que implementan la persistencia.
+Los repositorios traducen entre objetos de dominio y objetos ORM. Esta
+integración se encuentra en construcción y todavía no está conectada a todos
+los endpoints.
 
 
 ## ❓Q&A
 **1. ¿Cómo inicia el servidor?**
 
-La ejecución inicia con `main.py` cuando ejecuta la función que inicia el servidor (`start()`) con uvicorn y esta función dirige al archivo ubicado en `api/app.py`
+Al ejecutar `python main.py`, se llama a `start()` y Uvicorn importa la instancia
+FastAPI `app` desde `api/app.py`.
 
 ```
 main.py
@@ -357,7 +379,9 @@ ESPACIO PARA RESPUESTA
 
 **3. ¿Cuál es la puerta de entrada HTTP?**
 
-Como se mencionó anteriormente, la puerta de entrada a las solicitudes *HTTP* que envía el usuario desde la interfaz (Frontend), es `app.py` y la función `app()`. Solo participa al inicio y/o al final del flujo, nunca decide "qué hacer" con el negocio
+La instancia `app` de `api/app.py` es la entrada ASGI de las solicitudes HTTP y
+registra middleware y routers. Los routers coordinan cada endpoint; los
+servicios del dominio aplican las reglas de negocio.
 
 **4. ¿Qué es un release y cómo será abordado en Your-Space?**
 
@@ -400,11 +424,9 @@ Es un framework  moderno, su foco diferenciador de muchos otros es que FastAPI s
 5. si ok - return owner autenticado
 
 
-Continuación del desarrollo después de domain
+### API y routers
 
 ---
-> Esta es una nota temporal para saber en qué parte del backend nos encontramos desarrollando
-# API- Schemas primero  ← AHORA ESTÁS AQUÍ
 Dentro de api/:
 Definir qué recibe el sistema
 Definir qué devuelve
@@ -423,26 +445,22 @@ los endpoints son simples
 no hay dudas de tipos
 el router solo orquesta
 
-Infrastructure (DESPUÉS de API)
-Ahora sí:
-Repositorios reales (SQLAlchemy)
-Session / engine
-Inyección de dependencias
-Implementar interfaces que hoy tienes fakeadas
-Infrastructure implementa lo que API + Domain ya definieron.
-Nunca al revés.
+Infraestructura (en integración)
+Ya existen el engine, modelos ORM y repositorios SQLAlchemy. Falta conectarlos
+a los servicios mediante la composición de dependencias y alinear las
+operaciones que los servicios esperan. La infraestructura proporciona la
+persistencia; el dominio no debe depender de SQLAlchemy ni importarla.
 
 
 
 ---
 
-Plan - Fases del desarrollo del proyecto:
- 
-1. Definir reglas de negocio (Paso conceptual)
-2. Levantar el servidor (Para nuestro caso, FastApi y uvicorn)
-3. Crear modelos y servicios (Empezar desarrolando todo el layer `domain/`)
-4. Primeros Tests de dominio (Unit tests)
-5. Implementar lógica mínima   - **Estado actual del repositorio**
-6. Creae routers, schemas (expandirse al layer `api/`)
-7. Sonarqube ***(Implementado localmente)***
-8. Conectar BD, Repositorios, SqlAlchemy
+## Estado del desarrollo
+
+Ya existen modelos de dominio, servicios, fakes para pruebas unitarias, schemas
+y routers. También se han empezado a crear modelos ORM y repositorios SQLAlchemy.
+La conexión entre routers, servicios y repositorios reales aún está pendiente;
+los repositorios y modelos ORM también necesitan terminar de alinearse entre sí.
+Por tanto, el siguiente paso no es “empezar infraestructura después de la API”,
+sino integrar y probar la infraestructura ya iniciada sin acoplar el dominio a
+ella.

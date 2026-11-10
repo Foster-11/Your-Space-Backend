@@ -1,32 +1,12 @@
-# domain/ : Razon de ser del sistema, nucleo del negocio testeable
-# owner : propietario de un salon o varios salones
-# ../models/: Entidades del negocio, no son tablas sino conceptos del negocio (Aunque en esta solucion mezclamos las entidades de negocio y entidades ORM)
-
-# ORM: Object Relational Mapping,  técnica de programación utilizada para convertir datos 
-# entre sistemas de tipos incompatibles en lenguajes de programación orientados a objetos y bases de datos relacionales
-
-# domain/models/owner.py
-from uuid import uuid4 
-from sqlalchemy.dialects.postgresql import UUID
-import sqlalchemy as sql
-import sqlalchemy.orm as orm
-
-from infrastructure.db.base import Base 
-
-class Owner(Base):
-    __tablename__ = "owner" # nombre de la tabla en la bd
-    id_owner = sql.Column(UUID(as_uuid=True), primary_key=True, default=uuid4)
-    name = sql.Column(sql.String(100), index=True, nullable=False) # index=True crea un indice para busquedas rapidas
-    last_name = sql.Column(sql.String, index=True, nullable=False)
-    email = sql.Column(sql.String, unique=True, index=True, nullable=False) #unique : restriccion para la bd
-    password = sql.Column(sql.String, nullable=False) 
-
-    #Relaciones
-    spaces = orm.relationship(
-        "Space", # nombre de la clase en space.py
-        back_populates="owner", # relacion inversa en space
-        cascade="all, delete-orphan" # si elimina owner, se eliminan sus espacios
-    )
+# domain/models/owner.py : entidad de negocio, sin dependencias de persistencia
+from dataclasses import dataclass, field
+from uuid import UUID, uuid4
 
 
-
+@dataclass(kw_only=True)
+class OwnerDomainModel:
+    name: str
+    last_name: str
+    email: str
+    password: str  # siempre hasheada (la hashea owner_service)
+    id_owner: UUID = field(default_factory=uuid4)

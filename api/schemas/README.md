@@ -7,15 +7,20 @@ Su responsabilidad es:
 - Validar datos HTTP de entrada.
 - Definir el formato de las respuestas.
 - Generar documentación automática de FastAPI.
-- Proteger el dominio de datos inválidos.
+- Validar tipos, formatos y restricciones básicas antes de invocar los servicios.
 - Evitar exponer información sensible.
 - Traducir entre el mundo HTTP y el dominio.
 
-Los Schemas no contienen reglas de negocio.
+Los schemas no sustituyen las reglas de negocio. Por ejemplo, pueden validar
+que un campo sea un correo con formato válido o que una capacidad sea positiva;
+el servicio/dominio debe validar invariantes que dependan del estado del sistema
+o de decisiones propias del negocio.
 
 Las reglas de negocio pertenecen al dominio
 
-Los Schemas solamente definen qué datos pueden entrar o salir del sistema.
+Los schemas definen qué datos pueden entrar o salir del sistema y aplican
+validación de frontera; no garantizan por sí solos que una operación sea válida
+según el estado del dominio.
 
 ### ¿Por qué existe este Módulo?
 Sin schemas, un cliente podría enviar:
@@ -25,7 +30,10 @@ Sin schemas, un cliente podría enviar:
   "password": "1"
 }
 ```
-y tu servicio tendría que validar todo manualmente. O sea, tendríamos que modificar el código del dominio para hacer estos filtros de validación. Y con ***Pydantic*** es más facil para FastAPI validar automáticamente antes de llegar al dominio: Tipos de datos, formatos, campos obligatorios, restricciones.
+y el router tendría que validar manualmente su formato. Con ***Pydantic***,
+FastAPI valida antes de llamar al servicio tipos de datos, formatos, campos
+obligatorios y restricciones declaradas en el schema. Las reglas de negocio
+siguen siendo responsabilidad del dominio.
 
 ```python
 class OwnerLoginSchema(BaseModel):
@@ -60,7 +68,10 @@ Estos modelos permiten validar la información que entra al sistema antes de que
 
 - ***BaseModel***
 
-Es la clase base de todos los schemas, ocurre algo similar al `Base` de los modelos ORM que vimos en `domain/models`. Los modelos en Schemas heredan de `BaseModel`, de esta clase los diferentes schemas van a poder ajustar su comportamiento gracias a las diferentes funcionalidades de `BaseModel`, según sus necesidades. 
+Es la clase base de todos los schemas. No debe confundirse con el `Base` de
+SQLAlchemy, que está en `infrastructure/db/base.py` y sirve para registrar los
+modelos ORM. Los schemas heredan de `BaseModel` para usar las funcionalidades
+de validación y serialización de Pydantic.
 
 ```text 
 BaseModel
@@ -84,7 +95,10 @@ Basicamente nos referimos a las clases que procesan lo que recibe el sistema bac
 class Config:
     from_attributes = True
 ```
-Permite ***contruir un Schema*** a partir de un ***objeto python*** cuyos atributos tengan los mismos nombres, por ejemplo:
+Permite ***construir un Schema*** a partir de un ***objeto Python*** cuyos
+atributos tengan los mismos nombres. Puede ser un objeto de dominio o un objeto
+ORM; en la arquitectura actual, la respuesta de los servicios es un objeto de
+dominio y no se debe asumir que el API recibe directamente un modelo SQLAlchemy.
 
 ```python
 # Objeto python
