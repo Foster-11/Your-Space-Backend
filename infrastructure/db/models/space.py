@@ -12,7 +12,7 @@ import sqlalchemy.orm as orm
 from infrastructure.db.base import Base
 
 
-class SpaceModel(Base):
+class SpaceInfrastructureModel(Base):
     __tablename__ = "space" # Nombre de la tabla en la bd
     id_space = sql.Column(UUID(as_uuid=True), primary_key=True, default=uuid4)
     id_owner = sql.Column(

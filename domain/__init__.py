@@ -1,5 +1,5 @@
-from domain.models.owner import Owner
-from domain.models.space import Space
-from domain.models.reservation import Reservation
+from domain.models.owner import OwnerDomainModel
+from domain.models.space import SpaceDomainModel
+from domain.models.reservation import ReservationDomainModel
 
-__all__ = ["Owner", "Space", "Reservation"]
+__all__ = ["OwnerDomainModel", "SpaceDomainModel", "ReservationDomainModel"]

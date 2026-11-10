@@ -3,12 +3,12 @@
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from domain.models.owner import OwnerDoaminModel
+from domain.models.owner import OwnerDomainModel
 from infrastructure.db.models import OwnerInfrastructureModel
 
 
-def _to_domain(model: OwnerModel) -> Owner:
-    return Owner(
+def _to_domain(model: OwnerInfrastructureModel) -> OwnerDomainModel:
+    return OwnerDomainModel(
         id_owner=model.id_owner,
         name=model.name,
         last_name=model.last_name,

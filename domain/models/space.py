@@ -4,7 +4,7 @@ from uuid import UUID, uuid4
 
 
 @dataclass(kw_only=True)
-class Space:
+class SpaceDomainModel:
     id_owner: UUID
     name: str
     capacity: int

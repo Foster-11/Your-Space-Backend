@@ -5,7 +5,7 @@ from uuid import UUID, uuid4
 
 
 @dataclass(kw_only=True)
-class Reservation:
+class ReservationDomainModel:
     id_space: UUID
     start_datetime: datetime
     end_datetime: datetime

@@ -15,7 +15,7 @@ from infrastructure.db.base import Base
 
 
 
-class ReservationModel(Base):
+class ReservationInfrastructureModel(Base):
     __tablename__ = "reservation" #Nombre de la tabla en la BD
     id_reservation = sql.Column(UUID(as_uuid=True), primary_key=True, default=uuid4)
     id_space = sql.Column(
