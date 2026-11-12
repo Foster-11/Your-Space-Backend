@@ -16,7 +16,7 @@ from pydantic import BaseModel, EmailStr, Field
 
 # Request
 class OwnerCreateSchema(BaseModel):
-    name: str = Field(..., min_length=1) # el ... indica que es obligatorio, min_length=1 para que no sea una cadena vacía
+    name: str = Field(..., min_length=1) # ... lo hace obligatorio y min_length exige al menos un carácter.
     last_name: str = Field(..., min_length=1)
     email: EmailStr
     password: str = Field(..., min_length=6)
@@ -37,5 +37,5 @@ class OwnerResponseSchema(BaseModel):
     email: EmailStr
 
     class Config:
-        from_attributes = True # Permite crear una instancia de OwnerResponseSchema a partir de un objeto que tenga atributos con los mismos nombres (como un modelo de SQLAlchemy)  permite devolver modelos del dominio sin acoplarlos a la capa de presentación.
+        from_attributes = True # Permite construir la respuesta desde atributos del objeto de dominio.
     

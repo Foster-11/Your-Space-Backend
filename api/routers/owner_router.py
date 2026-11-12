@@ -36,7 +36,7 @@ status_code=status.HTTP_201_CREATED : Indica que se ha creado un nuevo recurso (
 def create_owner(payload: OwnerCreateSchema):
     try:
         owner = register_owner(
-            owner_repo=None, # por qué None? porque la infraestructura vendrá después, por ahora nos enfocamos en la lógica de dominio y dejamos la implementación de la infraestructura para más adelante. Esto nos permite desarrollar y probar la lógica de negocio sin depender de detalles específicos de la infraestructura, lo que facilita el desarrollo iterativo y la separación de responsabilidades.
+            owner_repo=None, # Temporal: debe inyectarse un repositorio para que este endpoint pueda ejecutarse.
             name=payload.name,
             last_name=payload.last_name,
             email=payload.email,
@@ -58,7 +58,7 @@ def create_owner(payload: OwnerCreateSchema):
 def login(payload: OwnerLoginSchema):
     try:
         owner = login_owner(
-            owner_repo=None,  # ⚠️ infra vendrá después
+            owner_repo=None,  # Temporal: debe inyectarse un repositorio para que este endpoint pueda ejecutarse.
             email=payload.email,
             password=payload.password,
         )
@@ -77,7 +77,7 @@ def login(payload: OwnerLoginSchema):
     response_model=OwnerResponseSchema
 )
 def get_owner(owner_id: str):
-    # implementación mínima consciente
+    # Respuesta de ejemplo; todavía no consulta el repositorio.
     return {
         "id_owner": owner_id,
         "name": "",
@@ -104,4 +104,3 @@ def list_owners():
 )
 def delete_owner(owner_id: str):
     return None
-

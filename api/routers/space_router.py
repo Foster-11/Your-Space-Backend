@@ -22,8 +22,8 @@ router = APIRouter(prefix="/spaces", tags=["Spaces"])
 def create_space_endpoint(payload: SpaceCreateSchema):
     try:
         space = create_space(
-            space_repo=None,   # infrastructure luego
-            owner_repo=None,   # infrastructure luego
+            space_repo=None,   # Temporal: debe inyectarse un repositorio para ejecutar el servicio.
+            owner_repo=None,   # Temporal: se necesita para comprobar que el propietario exista.
             id_owner=payload.id_owner,
             name=payload.name,
             description=payload.description,

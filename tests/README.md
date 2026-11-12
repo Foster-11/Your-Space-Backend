@@ -1,18 +1,26 @@
 # YourSpace TESTS
 
-## 📋 Table of Contents
+## Contenido
 
- - [SONARQUBE LOCAL](#sonarqube-local)
-  - [Ejecutar pruebas unitarias](#ejecutar-pruebas-unitarias)
-  - [Q&A](#Q&A)
+- [Análisis con SonarQube](#análisis-con-sonarqube)
+- [Ejecutar las pruebas](#ejecutar-las-pruebas)
+- [TDD y niveles de prueba](#tdd-y-niveles-de-prueba)
+- [Preguntas frecuentes](#preguntas-frecuentes)
 
-## SONARQUBE LOCAL
+## Análisis con SonarQube
 
-### 1. Doble click a `StartSonar.bat` dentro de la carpeta `bin` de SonarQube alojado en la ruta que estableciste en tu explorador de archivos
+### 1. Inicia SonarQube
 
-### 2. Inicia sesión en `http://localhost:9000` con las credenciales de SonarQube después de ejecutar el archivo `.bat`
+Ejecuta `StartSonar.bat` desde la carpeta `bin` de tu instalación local de
+SonarQube.
 
-### 3. GENERAR EL REPORTE QUE RECIBIRÁ SONARQUBE (hacer esto previamente al paso 4):
+### 2. Inicia sesión
+
+Abre `http://localhost:9000` e inicia sesión después de que SonarQube arranque.
+
+### 3. Genera el reporte de cobertura
+
+Ejecuta las pruebas con cobertura antes de lanzar el análisis:
  ```bash
  pytest --cov=./ --cov-report=xml
 ```
@@ -40,12 +48,52 @@ pysonar --sonar-token=$env:SONAR_TOKEN
 pytest
  ```
 
+## TDD y niveles de prueba
 
-## Q&A
+TDD (desarrollo guiado por pruebas) es un ciclo: escribir una prueba que expresa
+un comportamiento, ejecutar la prueba y observar que falla, implementar lo
+mínimo necesario y volver a ejecutar las pruebas. Luego se puede mejorar el
+código manteniendo las pruebas en verde.
+
+### Pruebas unitarias de servicios
+
+Las pruebas de `domain/services/` usan repositorios fake en memoria. Así
+verifican reglas y resultados del servicio sin conectarse a Neon, PostgreSQL o
+SQLAlchemy. El fake debe ofrecer las mismas operaciones que el servicio
+necesita; los cambios a esas operaciones deben reflejarse también en sus tests.
+
+El servicio no tiene que dejar de usar un repositorio para que la persistencia
+real funcione. Debe depender de las operaciones que necesita, no de una
+`Session` ni de una clase ORM. En ejecución, se le entrega un repositorio
+SQLAlchemy; en una prueba unitaria, uno fake.
+
+### Pruebas de integración
+
+Las pruebas de integración verifican piezas reales conectadas entre sí:
+
+1. Probar un repositorio SQLAlchemy contra una base de pruebas valida consultas,
+   conversiones, claves foráneas y restricciones.
+2. Probar la API con `TestClient` valida rutas, schemas, códigos HTTP y la
+   composición de dependencias.
+3. Las pruebas end-to-end recorren la aplicación desde una solicitud externa
+   hasta su respuesta y pueden incluir una base de datos de pruebas.
+
+No uses la base de datos con datos reales de Neon como base de pruebas. Usa una
+base o rama aislada y limpia los datos entre pruebas; para cambios de esquema,
+aplica las mismas migraciones que se usarán en los otros entornos.
+
+Las pruebas unitarias actuales cubren principalmente servicios con fakes. Las
+pruebas de repositorios contra una base de datos y la integración HTTP con
+persistencia aún deben añadirse.
+
+
+## Preguntas frecuentes
+
 ### ¿Qué es SonarQube?
-Es una plataforma open source para realizar un análisis estático del código fuente. Evalúa continuamente parámetros cruciales como la duplicación del código, la cobertura de pruebas unitarias o la complejidad ciclomática, aportando métricas precisas que guian las decisiones técnicas. Se enfoca principalmente en identificar y corregir errores, vulnerabilidades de seguridad y puntos críticos en términos de calidad del software.
 
-El proceso de inspección estática genera informes detallados que proporcionan una visioón global sobre aspectos como la calidad técnina, la cobertura de pruebas y la detección temprana de posibles errores críticos.
+SonarQube analiza código fuente y reporta problemas de calidad, mantenibilidad
+y seguridad. La cobertura indica qué líneas ejecutan las pruebas; por sí sola
+no demuestra que el comportamiento sea correcto.
 
 ### ¿Qué es testeable en un backend?
 
@@ -93,3 +141,7 @@ TestClient(FastAPI)
 
 4. Pruebas End-to-End
 
+### ¿Qué es una prueba end-to-end?
+
+Comprueba un flujo de usuario a través de varias capas de la aplicación. Suele
+ser más lenta y requiere más configuración que una prueba unitaria.

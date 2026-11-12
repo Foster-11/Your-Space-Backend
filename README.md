@@ -5,13 +5,13 @@
 
 ## 📋 Table of Contents
 
- - [🗒️ Description](#Description)
- - [🏛️ Technologies](#technologies)
- - [⚙️ Setup](#setup)
- - [💡Cómo correr el código](#cómo-correr-el-código)
+ - [🗒️ Description](#️-description)
+ - [🏛️ Technologies](#️-technologies-and-knowledges)
+ - [⚙️ Setup](#️-setup)
+ - [💡Cómo correr el código](#-cómo-correr-el-código)
  - [🧩 Estructura del Backend](#-estructura-del-backend)
  - [🏛️ Arquitectura del Sistema](#️-arquitectura-del-sistema)
- - [🧱 Capas y Módulos](#capas-y-módulos)
+ - [🧱 Capas y Módulos](#-capas-y-módulos)
  - [❓ Q&A](#qa)
  - [🛤️ Flujos](#️-flujos)
 
@@ -28,7 +28,7 @@ FastAPI
 Pytest
 Pydantic
 SQLAlchemy
-PostgreSQL (Neon configurado; integración en construcción)
+PostgreSQL alojado en Neon (conexión configurada; integración de la API pendiente)
 Arquitectura por capas
 SonarQube
 Uvicorn
@@ -92,14 +92,11 @@ Asegurese de estar ubicado en el repositorio del proyecto
 python -m venv .venv
 ```
 
- - ***¡Asegurarse de esto antes de hacer un push!***
-Iniciar repositorio en git y agregar al `.gitignore` el archivo `.venv`
-```bash
-echo "*" > .venv/.gitignore
-```
+El repositorio ya debe excluir `.venv` mediante `.gitignore`; no es necesario
+añadir el entorno virtual a Git.
 
 ### Paso 3 — Activar el entorno virtual
-Hacer esto cada que inicias la terminal para ejecutar tu proyecto, *este es un paso muy frecuente.*
+Actívalo en cada terminal que vayas a usar para ejecutar el proyecto.
 
 **terminal bash:**
 ```bash
@@ -121,13 +118,17 @@ python -m pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
-```bash
-# Neon CLI
-npm i -g neon
-```
-> Esto lo hice porque escogí administar los datos del sistema con Neon
+### Configurar la conexión a la base de datos
 
-> Para utilizar Neon CLI necesitas `Node.js 20.19`+
+La aplicación lee `DATABASE_URL` del entorno. Para desarrollo local, se puede
+usar un archivo `.env` basado en `.env.template`; no se debe subir el archivo
+con credenciales al repositorio. La conexión permite acceder a la base, pero no
+crea ni actualiza automáticamente sus tablas. Consulta
+[Persistencia e infraestructura](./infrastructure/README.md) para administrar
+el esquema con migraciones.
+
+Neon CLI es opcional; no es necesario instalarlo para que SQLAlchemy use una
+URL de conexión.
 
 ---
 
@@ -258,7 +259,9 @@ conceptos de Domain-Driven Design, pero no implica que el sistema implemente
 completamente ese enfoque.
 
 
-Para principiantes como nosotros, es más fácil desarrollar al tener menor complejidad operativa. Sin embargo, a medida que aprendamos más sobre la ingeniería de software, vale la pena completamente desarrollar programas más complejos.
+Un monolito modular permite desplegar la aplicación como una unidad y mantener
+el código organizado en módulos. Esta estructura reduce la complejidad operativa
+frente a distribuir el sistema en varios servicios.
 
 - **Arquitectura por capas**
 
@@ -269,11 +272,11 @@ HTTP request
      │
      ▼
 API (schemas y routers)
-     │ invoca servicios y les provee repositorios
+     │
      ▼
 Domain (servicios, modelos y comportamiento esperado del repositorio)
      ▲
-     │ implementación de persistencia
+     │ implementación del acceso a datos
 Infrastructure (repositorios SQLAlchemy y modelos ORM)
      │
      ▼
@@ -282,37 +285,42 @@ PostgreSQL
 Para ver la diferencia entre dataclasses, ORM y repositorios, consulta
 [la guía de infraestructura](./infrastructure/README.md).
 
+La parte inferior del diagrama describe el diseño buscado, no una integración
+completa: algunos routers todavía pasan `None` en lugar de repositorios. Por
+eso, los endpoints de creación que dependen de esos servicios aún no pueden
+completar el flujo con persistencia.
+
 
 
 ## 🧱 Capas y Módulos
 
 ### Aplication Entry Point
 
-No es una capa como tal, pero es lo suficientemente relevante como para profundizarla aquí. Esta sección del sistema está compuesto por aquellos archivos que ayudan a encender los motores de nuestra aplicación: `main.py` y `api/app.py`. Son el mecanismo de arranque del servidor HTTP.
+No es una capa como tal. `main.py` y `api/app.py` son los archivos que participan
+en el arranque del servidor HTTP.
 
 En `main.py` está el punto de entrada opcional para iniciar Uvicorn, un servidor
 ASGI (Asynchronous Server Gateway Interface) que expone la aplicación FastAPI
 para recibir tráfico HTTP.
 
-En `api/app.py` se crea la instancia de FastAPI, se configura la documentación OpenAPI, registra el middleware y los routers, y se configura el comportamiento HTTP global 
+En `api/app.py` se crea la instancia de FastAPI y se registran el middleware y
+los routers. FastAPI genera la documentación OpenAPI a partir de las rutas y
+schemas declarados.
 
 
-### Domain (Capa)  
-Es el corazón y cerebro del backend. Aquí vive el conocimiento del negocio.
-**Páquetes**
- * **exceptions:**
- * **repositories:**
- * **Models:**
- * **Services:**
- * **security:**
+### Dominio
 
-### Api (Capa)
-Responsable de exponer funcionalidades mediante HTTP.
+Contiene modelos que representan datos del negocio, servicios que coordinan
+casos de uso, errores de dominio y utilidades de seguridad. Las pruebas
+unitarias de servicios usan repositorios fake en memoria.
+
+### API
+
+Expone las funcionalidades mediante HTTP.
 
 **Módulos**
- * **routers:**
- * **schemas:** La responsabilidad de este módulo es definir contratos. Las schemas cumplen 3 funciones críticas: 
- 1. Definir el contrato externo del sistema (¿Qué campos recibe el sistema?¿cuáles son obligatorios?¿cuáles son opcionales?¿qué tipo exacto tiene cada campo?¿en qué formato salen los campos?).
+ * **routers:** reciben solicitudes, invocan servicios y traducen resultados o errores a respuestas HTTP.
+ * **schemas:** definen los contratos de entrada y salida. Indican qué campos se reciben, cuáles son obligatorios, qué formato deben tener y qué datos se exponen.
 
     Los schemas controlan qué campos se reciben o se exponen. Por ejemplo,
     `OwnerResponseSchema` no incluye la contraseña. La aplicación debe seguir
@@ -323,7 +331,7 @@ Responsable de exponer funcionalidades mediante HTTP.
     aplicación. Sus validaciones de tipos y formatos no sustituyen las reglas
     de negocio.
 
-    #### Flujo objetivo donde encajan los schemas en el sistema
+    #### Flujo previsto para una solicitud y su respuesta
 
     ```
     HTTP Request
@@ -344,12 +352,13 @@ Responsable de exponer funcionalidades mediante HTTP.
     ```
 
 
-### Infraestructure (Capa) 
+### Infraestructura
+
 Contiene detalles técnicos. En `infrastructure/db/` están el engine y la sesión
 SQLAlchemy, los modelos ORM y los repositorios que implementan la persistencia.
-Los repositorios traducen entre objetos de dominio y objetos ORM. Esta
-integración se encuentra en construcción y todavía no está conectada a todos
-los endpoints.
+Los repositorios traducen entre objetos de dominio y objetos ORM. La API aún no
+inyecta estos repositorios de forma consistente; consulta
+[Persistencia e infraestructura](./infrastructure/README.md) para más detalles.
 
 
 ## ❓Q&A
@@ -368,99 +377,70 @@ uvicorn.run("api.app:app")
 FastAPI app vive en app.py
 ```
 
-LA FUNCIÓN DE `app.py` ES RECIBIR LAS PETICIONES _**HTTP**_ Y DELEGARLAS A LOS MÓDULOS CORRECTOS
+**2. ¿Qué configura Uvicorn?**
 
-`main.py` inicia el servidor y _define las configuraciones de ejecución_
+Uvicorn es el servidor ASGI que ejecuta la aplicación. En `main.py`, `host`
+define en qué interfaz de red escucha, `port` define el puerto y `reload=True`
+reinicia el servidor cuando detecta cambios durante el desarrollo. La recarga
+automática no está pensada para producción.
 
-
-**2. ¿Qué son las configuraciones de ejecución de un servidor? - uvicorn**
-
-ESPACIO PARA RESPUESTA
-
-**3. ¿Cuál es la puerta de entrada HTTP?**
+**3. ¿Dónde entra una solicitud HTTP?**
 
 La instancia `app` de `api/app.py` es la entrada ASGI de las solicitudes HTTP y
 registra middleware y routers. Los routers coordinan cada endpoint; los
 servicios del dominio aplican las reglas de negocio.
 
-**4. ¿Qué es un release y cómo será abordado en Your-Space?**
+**4. ¿Qué es un servicio de dominio?**
 
-**5. ¿Qué es Service Layer y por qué aplica este patrón en YourSpace-Backend?**
+Un servicio coordina un caso de uso y aplica reglas que pueden requerir
+consultar repositorios. Por ejemplo, `create_reservation` comprueba el intervalo,
+busca el espacio, valida solapamientos y asistentes, y solicita guardar la
+reserva. El servicio recibe el repositorio como dependencia, de modo que sus
+pruebas unitarias pueden usar un fake en vez de conectarse a una base de datos.
 
-**6. ¿Qué será de Your Space en el Futuro?**
+**5. ¿Qué hace `__init__.py`?**
+En este proyecto, marca paquetes de Python y también permite exponer nombres
+para imports más sencillos. Python también admite paquetes de espacio de nombres
+sin ese archivo, por lo que su presencia no es una regla universal.
 
-Actualmente, bajo las reglas de negocio, your space puede percibirce como un *Monolito Modular*. 
-Sin embargo, en el futuro, tiene todo lo necesario para escalar a una arquitectura Multi Tenancy. 
-
-La razón por la que no lo es ahora mismo, es porque el objetivo de este sistema es con fines educativos y prácticos, donde los usarios aprenden los conceptos básicos de la Ingeniería de Software de una manera más simple y digerida.
-
-**7. ¿Qué es el archivo `__init__.py`?**
-Es un archivo que se coloca dentro de un paquete para indicar que esa carpeta debe ser tratada como tal.
-
-**8. ¿Qué es FastAPI y qué problema resuelve?**
-Es un framework  moderno, su foco diferenciador de muchos otros es que FastAPI se enfoca en crear ***API HTTP*** de una manera sencilla, rápida y estructurada, utilizando las mismas funciones de python en los endpoints y decoradores. Una de las bondades más notorias de FastAPI, es que genera automaticamente la documentación propia de las API's por medio del formato OpenAPI, la cual utiliza la UI de swagger y nos ahorra el uso de herramientas como Postman
-
----
-
-> ¡¡¡Migrar cada flujo a cada módulo correspondiente!!!
-
-## 🛤️ **Flujos**
-
-(Crear mapa de flujo con domain)
-
-### **Domain:**
-### **Register - api llama a este service :**
-1. Recibe name, email, password
-2. verifica: si existe email
-3. hashea contraseña
-4. crea owner
-5. devuelve owner
-
-### **Login - api llama a este service**
-1. Recibe: email. password
-2. busca owner por email
-3. valida contraseña
-4. si falla - error de dominio
-5. si ok - return owner autenticado
-
-
-### API y routers
+**6. ¿Qué es FastAPI?**
+Es un framework de Python para construir APIs HTTP. Usa tipos y decoradores
+para declarar rutas y genera un esquema OpenAPI que puede mostrarse, por
+ejemplo, en Swagger UI. Esta interfaz ayuda a explorar la API; no reemplaza
+herramientas de pruebas como Postman.
 
 ---
-Dentro de api/:
-Definir qué recibe el sistema
-Definir qué devuelve
-Ocultar detalles del dominio (password, hashes, etc.)
-Normalizar nombres, formatos, errores
-Ejemplos:
-OwnerCreateSchema
-OwnerResponseSchema
-LoginSchema
-SpaceCreateSchema
-ReservationCreateSchema
 
-API – Routes (después de schemas)
-Una vez los schemas estén claros:
-los endpoints son simples
-no hay dudas de tipos
-el router solo orquesta
+## Flujos de casos de uso
 
-Infraestructura (en integración)
-Ya existen el engine, modelos ORM y repositorios SQLAlchemy. Falta conectarlos
-a los servicios mediante la composición de dependencias y alinear las
-operaciones que los servicios esperan. La infraestructura proporciona la
-persistencia; el dominio no debe depender de SQLAlchemy ni importarla.
+Los siguientes pasos describen el comportamiento previsto en los servicios; no
+significan que todos los endpoints estén conectados a la base de datos.
 
+### Registro de propietario
 
+1. El schema de entrada valida los tipos y formatos del request.
+2. El router llama al servicio con los datos y un repositorio.
+3. El servicio comprueba si el email ya existe, genera el hash de contraseña,
+   crea el objeto de dominio y pide al repositorio que lo guarde.
+4. El schema de respuesta selecciona los campos que se devuelven; no incluye la
+   contraseña ni el hash.
 
----
+### Inicio de sesión
+
+1. El schema valida la forma de las credenciales.
+2. El servicio busca el propietario por email y compara la contraseña con el
+   hash guardado.
+3. Si las credenciales no son válidas, el servicio comunica un error de dominio;
+   el router lo convierte en una respuesta HTTP.
+
 
 ## Estado del desarrollo
 
-Ya existen modelos de dominio, servicios, fakes para pruebas unitarias, schemas
-y routers. También se han empezado a crear modelos ORM y repositorios SQLAlchemy.
-La conexión entre routers, servicios y repositorios reales aún está pendiente;
-los repositorios y modelos ORM también necesitan terminar de alinearse entre sí.
-Por tanto, el siguiente paso no es “empezar infraestructura después de la API”,
-sino integrar y probar la infraestructura ya iniciada sin acoplar el dominio a
-ella.
+El repositorio contiene schemas, routers, servicios, modelos de dominio, fakes
+para pruebas unitarias y adaptadores SQLAlchemy en desarrollo. La API aún no
+inyecta repositorios reales de forma consistente. Las pruebas actuales se
+centran en servicios con fakes; las pruebas de integración con una base de datos
+y las migraciones versionadas aún deben incorporarse. Consulta
+[la guía de pruebas](./tests/README.md) y
+[la guía de persistencia](./infrastructure/README.md) para conocer el propósito
+de cada etapa.

@@ -1,7 +1,9 @@
-> Aquí vamos a documentar lo aprendido sobre excepciones
+# Excepciones del dominio
 
 
-La excepciones en este módulo expresan conceptos del negocio:
+Las excepciones de `domain/exceptions/` comunican que una operación no puede
+continuar porque se incumplió una regla o no se encontró un recurso esperado.
+Por ejemplo:
 ```
 OwnerAlreadyExistsError
 
@@ -10,7 +12,9 @@ InvalidCredentialsError
 OwnerNotFoundError
 ```
 
-Pensar en las excepciones de esta manera permiten que el **dominio** pueda comunicar qué regla fue violada sin incluir aún : HTTP, FastAPI, etc
+Estas excepciones heredan de `DomainError`. Así los servicios pueden describir
+problemas del negocio sin depender de HTTP, FastAPI ni de una base de datos. La
+capa API decide cómo traducirlas a respuestas HTTP.
 
 Aquí estamos separando los Errores de Dominio vs Errores Técnicos, lo que nos facilitaría mucho trabajo más adelante, aunque construirlo inicialmente resulte engorroso
 

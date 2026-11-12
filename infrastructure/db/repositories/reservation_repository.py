@@ -1,5 +1,6 @@
 # ../repositories/: se escriben queries, se usan sesiones y se ejecuta sql
 # ../repositories/: queries, sesiones y traducción dominio <-> ORM
+# Adaptador SQLAlchemy que traduce entre objetos de dominio y modelos ORM.
 from sqlalchemy import exists, select
 from sqlalchemy.orm import Session
 

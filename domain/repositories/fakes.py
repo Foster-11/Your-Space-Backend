@@ -1,13 +1,10 @@
-# domain/repositories/fakes.py : Infraestructura para testing !!!
+# domain/repositories/fakes.py: repositorios en memoria para pruebas unitarias.
 
 """
-Los Fake Repositories son implementaciones simuladas de los repositorios reales que existirán en la capa de infraestructura.
-Su propósito principal es permitir probar las reglas de negocio del dominio sin depender de componentes externos como:
-- PostgreSQL
-- SQLAlchemy
-- Conexiones de red
-- Infraestructura
-- Sistemas externos
+Los repositorios fake guardan objetos en memoria y ofrecen las operaciones que
+necesitan los servicios. Permiten probar la lógica del servicio sin conectarse a
+la base de datos. No sustituyen las pruebas de integración de los repositorios
+SQLAlchemy.
 """
 
 #---------OWNER------------------
@@ -17,13 +14,9 @@ class FakeOwnerRepository:
         # Se ejecuta automáticamente cuando se crea una instancia del repositorio.
         # Inicializa una estructura en memoria para almacenar owners.
         self.owners = {}
-        # Diccionario donde:
-        # - la clave será el id del owner
-        # - el valor será el objeto Owner completo
  
     def add(self, owner):
-        # Agrega un owner al repositorio en memoria.
-        # Usamos el id como clave para poder buscarlo rápidamente.
+        # Usa el identificador como clave para buscar o reemplazar el registro.
         self.owners[owner.id_owner] = owner
  
     def get_owner_by_id(self, id_owner):

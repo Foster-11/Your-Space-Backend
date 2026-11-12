@@ -1,59 +1,84 @@
-# Infrastructure
+# Persistencia e infraestructura
 
-La infraestructura contiene los detalles técnicos con los que la aplicación
-accede a recursos externos, como la base de datos. En este proyecto, el código
-de persistencia está bajo `infrastructure/db/`.
+La infraestructura conecta la aplicación con recursos técnicos externos. En
+este proyecto, `infrastructure/db/` contiene la configuración de SQLAlchemy, los
+modelos ORM y los repositorios que consultan o modifican la base de datos.
 
-## Modelos de dominio y modelos ORM
+## Tres representaciones, tres responsabilidades
 
-Hay dos representaciones distintas de los datos:
+- **Schema de API:** describe los datos que una solicitud puede enviar o que
+  una respuesta puede mostrar. Por ejemplo, la solicitud para crear un
+  propietario recibe una contraseña sin procesar; la respuesta no la expone.
+- **Modelo de dominio:** representa información y conceptos que usan las reglas
+  del negocio. Los servicios trabajan con estos objetos, no con tablas.
+- **Modelo ORM:** describe cómo se guardan esos datos en tablas con SQLAlchemy:
+  columnas, claves primarias y foráneas, restricciones y relaciones.
 
-- `domain/models/` contiene dataclasses (`Owner`, `Space` y `Reservation`).
-  Representan conceptos del negocio y no importan SQLAlchemy.
-- `infrastructure/db/models/` contiene las clases ORM de SQLAlchemy, con
-  nombres de tabla, columnas, claves foráneas y relaciones. Son detalles de
-  persistencia; no son las entidades de `domain/models`.
+No es necesario que las tres representaciones tengan los mismos campos. Cada
+una debe incluir lo necesario para su responsabilidad y conservar el significado
+de los datos cuando la aplicación los transforma.
 
-`infrastructure/db/base.py` define `Base`, una clase declarativa compartida.
-SQLAlchemy usa la metadata asociada a esta clase para registrar los modelos ORM.
-`Base` no es una entidad ni una tabla. Mantener el archivo en `infrastructure/db/`
-es una organización válida: está en la misma capa técnica que la base de datos
-y evita que el dominio dependa de SQLAlchemy. También sería válido ubicarlo en
-`infrastructure/db/models/base.py` si se prefiere agruparlo con los modelos ORM;
-no debe moverse a `domain/models/`.
+`infrastructure/db/base.py` define la clase declarativa `Base`. SQLAlchemy usa
+su metadata para registrar los modelos ORM. `Base` no es una entidad del negocio
+ni crea o actualiza por sí sola las tablas de una base de datos.
 
-## Repositorios
+## Repositorios y conversión
 
-Los repositorios SQLAlchemy están en `infrastructure/db/repositories/`. Cada
-uno recibe una `Session` y actúa como adaptador de persistencia:
+Un repositorio adapta las operaciones que necesita un servicio a consultas de
+persistencia. Por ejemplo, el servicio de reservas solicita comprobar si hay
+solapamiento y guardar una reserva. El repositorio SQLAlchemy consulta el modelo
+ORM, ejecuta las operaciones con una `Session` y convierte los resultados ORM
+en objetos de dominio.
 
-1. Recibe o devuelve un objeto de dominio.
-2. Convierte el objeto de dominio en un modelo ORM para guardar o consultar.
-3. Ejecuta las operaciones de SQLAlchemy y convierte el resultado ORM de vuelta
-   a un objeto de dominio.
+Los repositorios fake de `domain/repositories/fakes.py` realizan operaciones
+similares en memoria. Sirven para probar el comportamiento de los servicios sin
+una base de datos; no reemplazan las pruebas de integración del repositorio real.
+Actualmente, los servicios usan operaciones de repositorio por convención; aún
+no hay un `Protocol` o una interfaz formal que las declare.
 
-Por ejemplo, el servicio de reservas trabaja con `Reservation` del dominio y
-usa operaciones como comprobar solapamientos y guardar. El repositorio traduce
-esas operaciones a consultas sobre el modelo ORM de reservas. Así, las reglas
-de negocio no necesitan conocer tablas, columnas ni sesiones SQLAlchemy.
+SQLAlchemy ofrece expresiones para construir consultas sin concatenar cadenas
+SQL manualmente. Por ejemplo, `select(...)` representa una consulta que
+SQLAlchemy compila al dialecto de la base de datos configurada. Esto no limita
+el uso de consultas complejas: pueden expresarse con las herramientas de
+SQLAlchemy cuando el caso lo requiera.
 
-Los fakes de `domain/repositories/fakes.py` implementan operaciones equivalentes
-en memoria para aislar las pruebas unitarias de la base de datos. Los servicios
-usan esos métodos por convención (por ejemplo, `add` o `get_space_by_id`), sin
-que actualmente exista una interfaz o `Protocol` formal de repositorio.
+## Cómo crear y cambiar las tablas
 
-## Estado actual y siguiente integración
+Las clases ORM describen el mapeo esperado por la aplicación, pero no actualizan
+automáticamente un esquema existente. Para administrar cambios de esquema de
+forma repetible, se recomienda usar **Alembic**:
 
-Los modelos ORM y los repositorios están en construcción. La API todavía pasa
-`None` como repositorio en varios endpoints, así que los repositorios SQLAlchemy
-no forman parte del flujo HTTP ejecutable. Además, `models/__init__.py` exporta
-`Owner`, `Space` y `Reservation`, mientras algunos repositorios importan los
-nombres `OwnerModel`, `SpaceModel` y `ReservationModel`; esa diferencia debe
-resolverse antes de integrar esa capa. También debe acordarse el valor de
-`id_state`: es opcional en la dataclass del dominio pero obligatorio en el ORM.
+1. Cambiar los modelos ORM.
+2. Generar y revisar una migración.
+3. Aplicar esa migración al entorno de desarrollo o despliegue.
 
-Cuando se conecte la infraestructura, la composición de la aplicación deberá
-crear/proveer la sesión y el repositorio concreto al servicio. La dirección de
-dependencias deseada es que infraestructura conozca los modelos del dominio y
-sus operaciones esperadas, mientras que el dominio no importe modelos ORM,
-sesiones ni SQLAlchemy.
+Una migración es un cambio versionado de la estructura de la base de datos.
+Permite aplicar los mismos cambios en distintos entornos y deja un historial de
+cómo evolucionaron las tablas.
+
+`Base.metadata.create_all()` puede ser útil para preparar una base vacía en una
+prueba o prototipo, pero solo crea las tablas que faltan. No modifica tablas
+existentes ni sustituye las migraciones. No se recomienda usarlo al arrancar la
+aplicación para gestionar el esquema de Neon o de producción.
+
+## Pruebas y transacciones
+
+Las pruebas unitarias de servicios deben usar repositorios fake. Las pruebas de
+integración deben verificar que los repositorios SQLAlchemy traduzcan y
+persistan correctamente los datos, usando una base de pruebas separada de los
+datos reales.
+
+En el código actual, los métodos de escritura de los repositorios llaman a
+`commit()`. Esto confirma cada operación desde el repositorio y es sencillo para
+un primer ejemplo, pero dificulta agrupar varias escrituras en una transacción.
+Al crecer el flujo, conviene decidir el límite transaccional del caso de uso y
+confirmar o revertir la sesión desde una unidad de trabajo o desde la capa que
+coordina la operación.
+
+## Estado actual
+
+El engine SQLAlchemy toma `DATABASE_URL` del entorno y los modelos ORM y
+repositorios están en desarrollo. Los routers aún pasan `None` como repositorio
+en algunos casos, por lo que la persistencia no está conectada al flujo HTTP.
+También hay que alinear algunos nombres de las clases ORM con las referencias
+que usan las relaciones y los repositorios antes de ejecutar esa integración.

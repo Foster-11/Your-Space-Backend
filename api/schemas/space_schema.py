@@ -16,17 +16,17 @@ from pydantic import BaseModel, Field
 # La API no necesita cargar el Owner completo aquí
 class SpaceCreateSchema(BaseModel):
     id_owner: UUID
-    name: str = Field(..., min_length=1) # el ... indica que es obligatorio, min_length=1 para que no sea una cadena vacía
-    description: str | None = None # el espacio de descripción es opcional, por eso se le asigna un valor por defecto de None
-    capacity: int = Field(..., gt=0) # el ... indica que es obligatorio, gt=0 para que la capacidad sea un número entero positivo
+    name: str = Field(..., min_length=1) # Es obligatorio y debe tener al menos un carácter.
+    description: str | None = None # La descripción es opcional.
+    capacity: int = Field(..., gt=0) # Es obligatoria y debe ser mayor que cero.
 
 # Response
 class SpaceResponseSchema(BaseModel):
     id_space: UUID
     id_owner: UUID
     name: str
-    description: str | None # el espacio de descripción es opcional, por eso se le asigna un valor por defecto de None
+    description: str | None # La respuesta puede no incluir una descripción.
     capacity: int
 
     class Config: 
-        from_attributes = True # Permite crear una instancia de SpaceResponseSchema a partir de un objeto que tenga atributos con los mismos nombres (como un modelo de SQLAlchemy)  permite devolver modelos del dominio sin acoplarlos a la capa de presentación.
+        from_attributes = True # Permite construir la respuesta desde atributos del objeto de dominio.

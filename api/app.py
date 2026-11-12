@@ -1,5 +1,5 @@
 
-#api/ : capa HTTP. Recibe el trafico HTTP y lo distribuye
+# api/: capa HTTP. Recibe solicitudes y respuestas HTTP.
 
 # app.py : registra routers y configura middleware
 from fastapi import FastAPI
@@ -17,9 +17,12 @@ app: FastAPI = FastAPI(
 origins = ["*"]
 
 """
-CORS: Cross-Origin Resource Sharing. Permite a las aplicaciones web de python gestionar solicitudes de recursos desde dominios diferentes al del servidor.
+CORS (Cross-Origin Resource Sharing) es una política del navegador que controla
+si una página web puede hacer solicitudes a un servidor de otro origen. Un
+origen combina esquema, host y puerto.
 
-Middleware: Componente que se ejecuta antes o después de las solicitudes HTTP, permitiendo modificar la solicitud o la respuesta. En este caso, se utiliza para gestionar CORS.
+Middleware: componente que procesa solicitudes o respuestas durante su paso por
+la aplicación. En este caso, el middleware aplica la configuración CORS.
 """
 app.add_middleware(
     CORSMiddleware,
@@ -29,7 +32,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# endpoint raiz, para healthcheck básico : verás este mensaje al acceder a la raíz del API - local: http://127.0.0.1:8070/
+# Endpoint raíz para comprobar que la aplicación responde.
 @app.get("/")
 async def root():
     return "The API is running"
@@ -39,5 +42,7 @@ for router in routers:
     app.include_router(router)
 
 """
-Agrupar los routers de esta manera no es necesario si tu aplicación es relativamente pequeña (Podrias escribir todos los endpoints que necesitas en un solo archivo, aquí). Sin embargo, como estamos planificando una arquitectura más modular y escalable, esta práctica facilita la organización y el mantenimiento del código.
+Cada router agrupa endpoints relacionados. Incluirlos aquí mantiene la
+configuración de la aplicación separada de las rutas y facilita localizar y
+mantener cada grupo.
 """

@@ -1,19 +1,18 @@
-# infrastructure/ : Detalles Tecnicos
-# ../session.py: conexion con Neon
+# Crea el engine de SQLAlchemy usando la URL configurada en el entorno.
 
 from sqlalchemy import create_engine
 from dotenv import load_dotenv
 import os
 
 load_dotenv()
-DATABASE_URL = os.getenv("DATABASE_URL")
+DATABASE_URL = os.getenv("DATABASE_URL") # Toma la URL de la base de datos desde las variables de entorno
 
 engine = create_engine(
    DATABASE_URL,
-    pool_size=10,              # Conexiones mínimas mantenidas
-    max_overflow=5,            # Conexiones extra más allá de pool_size
-    pool_timeout=30,           # Segundos esperando conexión disponible
-    pool_recycle=1800,         # Reciclar conexiones después de 30 minutos
-    pool_pre_ping=True,        # Verificar salud de conexión antes de usar
-    echo=False
+    pool_size=10,              # Máximo de conexiones reutilizables que conserva el pool.
+    max_overflow=5,            # Conexiones temporales adicionales cuando el pool está ocupado.
+    pool_timeout=30,            # Máximo de segundos de espera por una conexión disponible.
+    pool_recycle=1800,          # Reemplaza una conexión al volver a usarla si supera esta antigüedad.
+    pool_pre_ping=True,        # Comprueba la conexión al tomarla del pool.
+    echo=False                 # Si es True, registra las consultas SQL para depuración.
 )

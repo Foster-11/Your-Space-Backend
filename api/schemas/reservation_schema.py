@@ -3,7 +3,7 @@
 """
 Expone:
 1. crear una nueva reserva
-2. validar rangos de fechas para evitar solapamientos
+2. validar los tipos y restricciones declarados para los datos de entrada
 3. Listar reservas
 """
 
@@ -23,7 +23,7 @@ class ReservationCreateSchema(BaseModel):
     client_email: str
     expected_attendees: int = Field(..., gt=0) # el ... indica que es obligatorio, gt=0 para que sea un número positivo
 
-    class Config: # Permite agregar ejemplos a la documentación de la API, lo que facilita a los desarrolladores entender cómo usar el endpoint y qué tipo de datos se espera en la solicitud.
+    class Config: # Agrega un ejemplo al esquema OpenAPI generado para esta solicitud.
         json_schema_extra = {
             "example": {
                 "id_space": "550e8400-e29b-41d4-a716-446655440000",
@@ -47,6 +47,5 @@ class ReservationResponseSchema(BaseModel):
     client_name: str
     client_email: str
 
-    class Config: # Permite crear una instancia de ReservationResponseSchema a partir de un objeto que tenga atributos con los mismos nombres (como un modelo de SQLAlchemy)  permite devolver modelos del dominio sin acoplarlos a la capa de presentación.
+    class Config: # Permite construir la respuesta desde atributos del objeto de dominio.
         from_attributes = True
-

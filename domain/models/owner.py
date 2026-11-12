@@ -8,5 +8,5 @@ class OwnerDomainModel:
     name: str
     last_name: str
     email: str
-    password: str  # siempre hasheada (la hashea owner_service)
+    password: str  # Guarda el hash generado por el servicio, nunca la contraseña en texto plano.
     id_owner: UUID = field(default_factory=uuid4)

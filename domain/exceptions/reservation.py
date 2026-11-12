@@ -21,5 +21,5 @@ class ReservationNotFound(DomainError):
     pass
 
 class ReservationCancellationWindowExpiredError(DomainError):
-    # Se lanza cuando La ventana de cancelación expiró.
+    # Se usa cuando ya no se permite cancelar dentro del plazo establecido.
     pass

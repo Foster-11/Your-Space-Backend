@@ -1,25 +1,6 @@
-# domain/ : Razon de ser del sistema, nucleo del negocio testeable
-# ../services/: logica real,  reglas del negocio, lanzamiento de excepciones (fail fast + graceful handling)
-#   inputs:
-#       datos primitivos
-#       repositorios/sesiones (inyectadas)
-#   outputs:
-#       entidades
-#       errores de dominio
+"""Casos de uso de propietarios: registro y autenticación."""
 
-
-# owner_service.py : reglas para los propietarios en el sistema - Entidad de identidad
-
-# domain/services/owner_service.py
-
-# Respondabilidades clave:
-# 1. Registrar owner - check
-# 2. Validar email para login - check
-# 3. hashear contraseña - check
-# 4. validar credenciales para login - check
-# 5. login : email existe y contraseña coincide - check
-
-from domain.models.owner import Owner
+from domain.models.owner import OwnerDomainModel
 from domain.exceptions import ( # Funciona así gracias a __init__.py
    OwnerAlreadyExistsError, # imports limpios
    InvalidCredentialsError
@@ -31,12 +12,12 @@ from domain.security import (
 
 def register_owner(
   *, # Fuerza el uso de parámetros nombrados
-  owner_repo, # abstraccion del acceso a datos, inyectada para desacoplar el dominio de la BD (PARA UNIT TESTS)
+  owner_repo, # Dependencia con operaciones de repositorio; puede ser fake en tests o SQLAlchemy en ejecución.
   name: str,
   last_name: str,
   email: str,
   password: str
-) -> Owner:# typehint - indica qué retorna la función. Mejora legibilidad, test y análisis estático
+) -> OwnerDomainModel:  # Indica el tipo de entidad que devuelve este caso de uso.
     """
     Registra un nuevo owner en el sistema
 
@@ -51,7 +32,7 @@ def register_owner(
     
     hashed_password = hash_password(password) 
     
-    owner = Owner(
+    owner = OwnerDomainModel(
      name=name,
      last_name=last_name,
      email=email,
@@ -66,7 +47,7 @@ def login_owner(
       email: str,
       password: str,
       owner_repo
-) -> Owner:
+) -> OwnerDomainModel:
     """
     Valida credenciales y retorna owner autenticado
     """

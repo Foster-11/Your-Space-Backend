@@ -22,8 +22,8 @@ router = APIRouter(prefix="/reservations", tags=["Reservations"])
 def create_reservation_endpoint(payload: ReservationCreateSchema):
     try:
         reservation = create_reservation(
-            reservation_repo=None,  # infrastructure luego
-            space_repo=None,        # infrastructure luego
+            reservation_repo=None,  # Temporal: debe inyectarse un repositorio para ejecutar el servicio.
+            space_repo=None,        # Temporal: se necesita para consultar el espacio que se reserva.
             id_space=payload.id_space,
             start_datetime=payload.start_datetime,
             end_datetime=payload.end_datetime,
@@ -61,4 +61,3 @@ def list_reservations():
 @router.delete("/{reservation_id}", status_code=204)
 def cancel_reservation(reservation_id: str):
     return None
-

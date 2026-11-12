@@ -1,8 +1,8 @@
 # Este archivo tiene el propósito de probar la conexión a la base de datos Neon usando SQLAlchemy y dotenv.
 # Para probarlo es muy sencillo: utiliza una terminal donde tengas activo el ambiente virtual
 # y ejecuta el archivo con: python neonTestConnection.py
-# Asegúrate de tener un archivo .env con la variable NEON_URL configurada correctamente.
-# la salida debe ser algo similar a : Neon db version : PostgreSQL 17.11 (9045acd) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 12.2.0-14+deb12u1) 12.2.0, 64-bit
+# Asegúrate de tener DATABASE_URL configurada en el entorno o en un archivo .env.
+# La salida incluye la versión de PostgreSQL del servidor al que se conectó.
 
 from sqlalchemy import create_engine, text
 from dotenv import load_dotenv
@@ -20,12 +20,11 @@ load_dotenv() # reads variables from a .env file and sets them in os.environ
 DATABASE_URL = os.getenv("DATABASE_URL") 
 
 
-# Create engine
+# Crea un engine para abrir conexiones con la base configurada.
 engine = create_engine(DATABASE_URL)
 
-# Test connection
+# Ejecuta una consulta sencilla para comprobar que la conexión funciona.
 with engine.connect() as connection:
     result = connection.execute(text("SELECT version();"))
     print("Neon db version :", result.scalar())
-
 

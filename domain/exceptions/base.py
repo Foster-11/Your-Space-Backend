@@ -7,13 +7,15 @@ Este archivo define una jerarquia comun para los errores del negocio,
 permitiendo distinguir errores de dominio de errores técnicos
 
 Debe existir este archivo para tener UN PUNTO COMÚN DE CAPTURA DE ERRORES DE NEGOCIO
+La clase común permite capturar errores del dominio sin depender de HTTP ni de
+la base de datos.
 """
 
 class DomainError(Exception):
     pass
 
 
-# Todas las excepciones de dominio deben heredad de DomainError
+# Las excepciones que representan errores del negocio heredan de DomainError.
 
 # en proyectos grandes puede incluir:
 # 1. Codigos de error
