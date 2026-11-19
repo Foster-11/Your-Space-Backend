@@ -19,6 +19,10 @@ from domain.exceptions import (
     InvalidCredentialsError,
 )
 
+from infrastructure.db.repositories.owner_repository import (
+    SqlAlchemyOwnerRepository
+)
+
 # Router
 router = APIRouter(prefix="/owners", tags=["Owners"])
 

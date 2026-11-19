@@ -409,6 +409,10 @@ para declarar rutas y genera un esquema OpenAPI que puede mostrarse, por
 ejemplo, en Swagger UI. Esta interfaz ayuda a explorar la API; no reemplaza
 herramientas de pruebas como Postman.
 
+**7. ¿Qué quiere decir que " los servicios usan operaciones de repositorio por convención"?
+
+Significa que los servicios asumen que el repositorio tendrá ciertos métodos, aunque todavía no existe una interfaz o contrato formal que los obligue.
+
 ---
 
 ## Flujos de casos de uso
