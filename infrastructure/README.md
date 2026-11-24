@@ -19,8 +19,7 @@ una debe incluir lo necesario para su responsabilidad y conservar el significado
 de los datos cuando la aplicación los transforma.
 
 `infrastructure/db/base.py` define la clase declarativa `Base`. SQLAlchemy usa
-su metadata para registrar los modelos ORM. `Base` no es una entidad del negocio
-ni crea o actualiza por sí sola las tablas de una base de datos.
+su metadata para registrar los modelos ORM.
 
 ## Repositorios y conversión
 
@@ -31,8 +30,8 @@ ORM, ejecuta las operaciones con una `Session` y convierte los resultados ORM
 en objetos de dominio.
 
 Los repositorios fake de `domain/repositories/fakes.py` realizan operaciones
-similares en memoria. Sirven para probar el comportamiento de los servicios sin
-una base de datos; no reemplazan las pruebas de integración del repositorio real.
+similares en memoria. ***Sirven para probar el comportamiento de los servicios sin
+una base de datos***; no reemplazan las pruebas de integración del repositorio real.
 Actualmente, los servicios usan operaciones de repositorio por convención; aún
 no hay un `Protocol` o una interfaz formal que las declare.
 
@@ -63,17 +62,20 @@ aplicación para gestionar el esquema de Neon o de producción.
 
 ## Pruebas y transacciones
 
-Las pruebas unitarias de servicios deben usar repositorios fake. Las pruebas de
-integración deben verificar que los repositorios SQLAlchemy traduzcan y
-persistan correctamente los datos, usando una base de pruebas separada de los
-datos reales.
+Las pruebas unitarias de servicios deben usar repositorios fake. ***Las pruebas de
+integración*** deben verificar que los repositorios SQLAlchemy traduzcan y
+persistan correctamente los datos, ***usando una base de pruebas separada de los
+datos reales.***
 
-En el código actual, los métodos de escritura de los repositorios llaman a
-`commit()`. Esto confirma cada operación desde el repositorio y es sencillo para
-un primer ejemplo, pero dificulta agrupar varias escrituras en una transacción.
-Al crecer el flujo, conviene decidir el límite transaccional del caso de uso y
-confirmar o revertir la sesión desde una unidad de trabajo o desde la capa que
-coordina la operación.
+
+## ALEMBIC 
+La razón por la que consideré alembic es porque vamos a explorar algo muy importante que veremos en entorno de trabajo: Infraestructura escalable. Claramente de una manera muy sencilla y básica, como saben, nos interesa explorar estas dinámicas de una manera sencilla para que nos sea fácil digerir la información nueva de aprendizaje.
+
+Actualmente pensamos de una manera nuestra estructura de datos, pero si queremos empezar a volver más complejo y completo nuestro sistema, ¿cómo vamos a modificar las estructuras de datos cuando se llegue el momento de crecer?
+
+También hay que considerar que cuando el sistema está registrando información nueva, hay que actualizar nuestra base de datos constantemente con cada operacion de persistencia que ejecute el sistema. Este también es el principal motivo por el que lo vamos a usar. 
+
+
 
 ## Estado actual
 
@@ -82,3 +84,5 @@ repositorios están en desarrollo. Los routers aún pasan `None` como repositori
 en algunos casos, por lo que la persistencia no está conectada al flujo HTTP.
 También hay que alinear algunos nombres de las clases ORM con las referencias
 que usan las relaciones y los repositorios antes de ejecutar esa integración.
+
+

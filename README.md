@@ -144,7 +144,7 @@ en `127.0.0.1:8070`. También se puede iniciar directamente la aplicación ASGI:
 ```bash
 uvicorn api.app:app --host 127.0.0.1 --port 8070 --reload
 ```
-
+> Personalmente prefiero ejecutarlo con uvicorn
 
 
 En la siguiente url podrás encontrar la documentación generada por FastAPI del proyecto

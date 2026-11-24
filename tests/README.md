@@ -87,6 +87,12 @@ pruebas de repositorios contra una base de datos y la integración HTTP con
 persistencia aún deben añadirse.
 
 
+# A futuro:
+
+ 
+- Decidir después quién controla el commit: hoy los repositorios lo hacen internamente, algo sencillo al inicio, pero menos flexible si un caso de uso necesita guardar varios cambios en una sola transacción.
+
+
 ## Preguntas frecuentes
 
 ### ¿Qué es SonarQube?

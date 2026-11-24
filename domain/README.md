@@ -44,3 +44,7 @@ Entidades:
 - Owner
 - Space
 - Reservation
+
+
+# A Futuro
+- Declarar formalmente las operaciones que espera cada servicio mediante un `Protocol`. No es necesario para empezar con TDD; sí ayuda a detectar si un fake o repositorio real no cumple el contrato. 
